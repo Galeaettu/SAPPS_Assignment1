@@ -13,5 +13,15 @@ namespace Assignment1.Controllers
         {
             return View();
         }
+
+        public ActionResult UnhandledErrors()
+        {
+            return View();
+        }
+
+        public ActionResult PageNotFound()
+        {
+            return View();
+        }
     }
 }
