@@ -17,10 +17,25 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("DocReview", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    <li class="nav-item">
+                        @Html.ActionLink("Home", "Index", "Home", new { area = ""}, new { @class = "nav-link"})
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav pull-right">
+                    <li class="nav-item">
+                        @if (Context.User.Identity.IsAuthenticated)
+                        {
+                            @Html.ActionLink("Sign Out", "SignOut", "Accounts", new { area = "" }, new { @class = "nav-link" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Log In", "Login", "Accounts", new { area = "" }, new { @class = "nav-link" })
+                        }
+                    </li>
                 </ul>
             </div>
         </div>
@@ -30,7 +45,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - DocReview - Christian Galea SWD-6.2B</p>
         </footer>
     </div>
 
