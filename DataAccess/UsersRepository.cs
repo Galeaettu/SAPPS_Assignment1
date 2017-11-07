@@ -14,6 +14,11 @@ namespace DataAccess
 
         }
 
+        public List<User> GetUsers()
+        {
+            return Entity.Users.ToList();
+        }
+
         public List<User> GetUsers(string keyword)
         {
             return Entity.Users.Where(x => x.Name.Contains(keyword) || x.Surname.Contains(keyword)).ToList();
