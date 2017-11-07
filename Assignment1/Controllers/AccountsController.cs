@@ -15,6 +15,7 @@ namespace Assignment1.Controllers
             return View();
         }
 
+        [HttpPost]
         public ActionResult Login(string username, string password)
         {
             if (new UsersOperations().Login(username, password) == true)
