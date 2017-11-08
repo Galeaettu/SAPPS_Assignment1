@@ -51,28 +51,6 @@ namespace DataAccess
             return u.Roles.Contains(r);
         }
 
-        /// <summary>
-        /// Allocate a Document to be available to a Reviewer.
-        /// </summary>
-        /// <param name="u">Reviewer to view the document</param>
-        /// <param name="d">The document to be viewed</param>
-        public void AllocateDocumentToUser(User u, Document d)
-        {
-            u.Documents.Add(d);
-            Entity.SaveChanges();
-        }
-
-        /// <summary>
-        /// Checks if the user is already allocated to the document.
-        /// </summary>
-        /// <param name="u">User</param>
-        /// <param name="d">Document</param>
-        /// <returns></returns>
-        public bool IsUserAllocatedToDocument(User u, Document d)
-        {
-            return u.Documents.Contains(d);
-        }
-
         public Role GetRole(int id)
         {
             return Entity.Roles.SingleOrDefault(x => x.Id == id);
