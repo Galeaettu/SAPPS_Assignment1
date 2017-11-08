@@ -39,6 +39,51 @@ namespace BusinessLogic
             return new UsersRepository().Login(username, password);
         }
 
-        #endregion 
+        #endregion
+
+        #region Write Operations
+
+        public void Register(User u)
+        {
+            UsersRepository ur = new UsersRepository();
+            if (ur.DoesUsernameExist(u.Username) == true)
+            {
+                throw new UsernameExistsException("Username already exists");
+            }
+            else
+            {
+                ur.AddUser(u);
+                ur.AllocateRoleToUser(u, ur.GetRole(1));
+            }
+        }
+
+        public void Delete(string username)
+        {
+            UsersRepository ur = new UsersRepository();
+            if (ur.DoesUsernameExist(username))
+            {
+                ur.Delete(ur.GetUser(username));
+            }
+            else throw new UsernameExistsException("Username does not exist.");
+        }
+
+        public void AlocateRoleToUser(string username, int roleId)
+        {
+            UsersRepository ur = new UsersRepository();
+            User u = ur.GetUser(username);
+            Role r = ur.GetRole(roleId);
+
+            if (ur.IsUserAllocatedToRole(u, r))
+            {
+                throw new Exception("User cannot be allocated to role because he already has that role");
+            }
+            else
+            {
+                ur.AllocateRoleToUser(u, r);
+            }
+        }
+
+
+        #endregion
     }
 }
