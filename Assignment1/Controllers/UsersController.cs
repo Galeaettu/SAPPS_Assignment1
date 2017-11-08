@@ -24,6 +24,7 @@ namespace Assignment1.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Register(User u)
         {
             UsersOperations uo = new UsersOperations();
