@@ -21,7 +21,7 @@ namespace Assignment1.Controllers
             if (new UsersOperations().Login(username, password) == true)
             {
                 FormsAuthentication.SetAuthCookie(username, true);
-                return RedirectToAction("Index", "Users");
+                return RedirectToAction("Index", "Home");
             }
             else
             {

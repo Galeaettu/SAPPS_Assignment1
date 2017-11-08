@@ -20,12 +20,12 @@ namespace Common
 
         [Display(Name = "First Name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "First name cannot be blank")]
-        [RegularExpression(@"^[a - zA - Z\s] +$",ErrorMessage = "First name must contain only letters of the alphabet")]
+        [RegularExpression(@"^[a-zA-Z\s]+$",ErrorMessage = "First name must contain only letters of the alphabet")]
         public string Name { get; set; }
 
         [Display(Name = "Last Name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Last name cannot be blank")]
-        [RegularExpression(@"^[a - zA - Z\s] +$", ErrorMessage = "Last name must contain only letters of the alphabet")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Last name must contain only letters of the alphabet")]
         public string Surname { get; set; }
     }
 
