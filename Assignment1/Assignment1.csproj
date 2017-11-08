@@ -112,6 +112,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -140,11 +141,16 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Users\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
       <Project>{F945D3CE-D36A-466D-A1ED-5A3B6372934C}</Project>
       <Name>BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{44CA25E9-B886-4D53-A42F-0B12CE2863DE}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
