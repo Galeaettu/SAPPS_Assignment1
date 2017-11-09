@@ -33,6 +33,28 @@ textarea {
     border-top: 2px solid #e6e6e6;
 }
 
-.text-muted{
+.footer-copyright{
     margin: 1.2em 0;
+}
+
+.navbar{
+    margin-bottom:0;
+    border-radius:0;
+}
+
+.nav-end{
+    margin-bottom:1.5em;
+}
+
+.message-bar {
+    padding: 0.2em;
+    border-width: 1px;
+    border-style: solid;
+    border-image: initial;
+}
+
+.user-message {
+    color: #2b6188;
+    background-color: #B4D2E7;
+    border-color: #9ec5e0;
 }
