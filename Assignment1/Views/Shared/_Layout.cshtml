@@ -26,16 +26,15 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav pull-right">
-                    <li class="nav-item">
-                        @if (Context.User.Identity.IsAuthenticated)
-                        {
-                            @Html.ActionLink("Sign Out", "SignOut", "Accounts", new { area = "" }, new { @class = "nav-link" })
-                        }
-                        else
-                        {
-                            @Html.ActionLink("Log In", "Login", "Accounts", new { area = "" }, new { @class = "nav-link" })
-                        }
-                    </li>
+                    @if (Context.User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">@Html.ActionLink("Sign Out", "SignOut", "Accounts", new { area = "" }, new { @class = "nav-link" })</li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">@Html.ActionLink("Register", "Register", "Users", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Log In", "Login", "Accounts", new { area = "" }, new { @class = "nav-link" })</li>
+                    }
                 </ul>
             </div>
         </div>
