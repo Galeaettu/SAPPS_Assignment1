@@ -4,11 +4,18 @@
 }
 
 <h2>Login</h2>
-
+<hr />
 <div>
     <form method="post" action="/Accounts/Login">
         Username: <input type="text" id="txtUsername" name="username" /> <br />
         Password: <input type="text" id="txtPassword" name="password" /> <br />
         <input type="submit" value="Log In" />
+    </form>
+
+    <form method="post" action="/Accounts/Login">
+        <div class="form-group input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+            <input type="text" id="txtUsername" name="username" />
+        </div>
     </form>
 </div>
