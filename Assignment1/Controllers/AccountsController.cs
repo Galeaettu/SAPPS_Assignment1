@@ -12,7 +12,14 @@ namespace Assignment1.Controllers
     {
         public ActionResult Login()
         {
-            return View();
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         [HttpPost]

@@ -20,7 +20,14 @@ namespace Assignment1.Controllers
         [HttpGet]
         public ActionResult Register()
         {
-            return View();
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         [HttpPost]
