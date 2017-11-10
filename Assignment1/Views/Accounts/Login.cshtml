@@ -5,10 +5,7 @@
 <h2>Login</h2>
 <hr />
 <div>
-    <div class="alert alert-info text-center">
-        <p>Don't have an account? <strong>@Html.ActionLink("Register", "Register", "Users")</strong></p>
-    </div>
-    <div class="row">
+    @*<div class="row">
         <div class="col-md-2 col-md-offset-5">
             <form class="form-horizontal" method="post" action="/Accounts/Login">
                 <div class="form-group input-group">
@@ -27,6 +24,34 @@
                     <button type="submit" class="btn btn-default" id="login" name="login">Log In</button>
                 </div>
             </form>
+        </div>
+    </div>*@
+    <div class="alert alert-warning text-center">
+        @ViewData["message"]
+    </div>
+    <div class="row grid-divider">
+        <div class="col-sm-6">
+            <div class="col-padding">
+                <form class="form-signin" method="post" action="/Accounts/Login">
+                    <div class="form-size">
+                        @*<h2 class="text-center">Please log in</h2>*@
+                        <label for="txtUsername" class="sr-only">Username</label>
+                        <input type="text" class="form-control" id="txtUsername" name="username" placeholder="Username" required autofocus />
+                        <label for="txtPassword" class="sr-only">Password</label>
+                        <input class="form-control" type="password" id="txtPassword" name="password" placeholder="Password" required/>
+                        <div class="captcha-position">
+                            <div class="g-recaptcha" data-sitekey="6LfGBzgUAAAAAO-3YLhS2R2L4kYDhAo9BqLlrxMt" data-callback="enableBtn"></div>
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-primary btn-block" id="login" name="login">Log In</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="col-padding text-center">
+                <h2>Don't have an account?</h2>
+                @Html.ActionLink("Register", "Register", "Users", null, htmlAttributes: new { @class = "btn btn-lg btn-primary" })
+            </div>
         </div>
     </div>
 </div>

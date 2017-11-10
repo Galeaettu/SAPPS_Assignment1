@@ -16,12 +16,6 @@ body {
     padding-right: 15px;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
 
 .footer {
     position: absolute;
@@ -62,3 +56,74 @@ textarea {
 #login-submit {
     margin-top:1em;
 }
+
+/*------ Login ------*/
+
+.form-signin {
+    padding: 0 15px 15px 15px;
+    margin: 0 auto;
+}
+
+.form-size {
+    max-width: 330px;
+    margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+
+.form-signin .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+
+    .form-signin .form-control:focus {
+        z-index: 2;
+    }
+
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+@media ( min-width: 768px ) {
+    .grid-divider {
+        position: relative;
+        padding: 0;
+    }
+
+        .grid-divider > [class*='col-'] {
+            position: static;
+        }
+
+            .grid-divider > [class*='col-']:nth-child(n+2):before {
+                content: "";
+                border-left: 1px solid #DDD;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+            }
+
+    .col-padding {
+        padding: 0 15px;
+    }
+}
+
+.captcha-position{
+    margin:1em 1em 1em 1em;
+}
+/*-------------------*/
