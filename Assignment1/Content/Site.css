@@ -58,3 +58,7 @@ textarea {
     background-color: #B4D2E7;
     border-color: #9ec5e0;
 }
+
+#login-submit {
+    margin-top:1em;
+}

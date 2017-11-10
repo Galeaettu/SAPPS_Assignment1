@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Login";
 }
-
 <h2>Login</h2>
 <hr />
 <div>
@@ -10,24 +9,33 @@
         <p>Don't have an account? <strong>@Html.ActionLink("Register", "Register", "Users")</strong></p>
     </div>
     <div class="row">
-        <div class="col-md-4 col-md-offset-4">
+        <div class="col-md-2 col-md-offset-5">
             <form class="form-horizontal" method="post" action="/Accounts/Login">
-                <div class="form-group input-group col-md-12">
+                <div class="form-group input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <input type="text" class="form-control" id="txtUsername" name="username" placeholder="Username" autofocus />
                 </div>
-                <div class="form-group input-group col-md-12">
+                <div class="form-group input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <input class="form-control" type="password" id="txtPassword" name="password" placeholder="Password" />
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="input-group col-sm-4 col-sm-offset-4">
-                            <button type="submit" class="btn btn-default" id="login" name="login">Log In</button>
-                        </div>
-                    </div>
+                <div class="col-md-12 col-md-pull-6">
+                    <div class="g-recaptcha" data-sitekey="6LfGBzgUAAAAAO-3YLhS2R2L4kYDhAo9BqLlrxMt" data-callback="enableBtn"></div>
+                </div>
+
+                <div id="login-submit" class="col-sm-12 col-md-offset-2">
+                    <button type="submit" class="btn btn-default" id="login" name="login">Log In</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        $('#login').prop("disabled", true);
+    });
+
+    function enableBtn() {
+        $('#login').prop("disabled", false);
+    }
+</script>
