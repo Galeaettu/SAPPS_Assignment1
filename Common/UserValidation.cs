@@ -14,8 +14,8 @@ namespace Common
         public string Username { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password cannot be blank")]
-        [StringLength(15, ErrorMessage = "Password must be longer than 6 characters and shorter than 15 characters", MinimumLength = 6)]
-        [RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15}$", ErrorMessage = "Passwords must contain at least one digit, one uppercase and one lowercase")]
+        //[StringLength(15, ErrorMessage = "Password must be longer than 6 characters and shorter than 15 characters", MinimumLength = 6)]
+        //[RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15}$", ErrorMessage = "Passwords must contain at least one digit, one uppercase and one lowercase")]
         public string Password { get; set; }
 
         [Display(Name = "First Name")]

@@ -38,7 +38,7 @@ namespace BusinessLogic
         {
             //logic to validate how many attempts have been tried by this username to log in.
 
-            return new UsersRepository().Login(username, password);
+            return new UsersRepository().Login(username, new Encryption().HashString(password));
         }
 
         #endregion
@@ -54,6 +54,7 @@ namespace BusinessLogic
             }
             else
             {
+                u.Password = new Encryption().HashString(u.Password);
                 ur.AddUser(u);
                 ur.AllocateRoleToUser(u, ur.GetRole(1));
             }
