@@ -40,6 +40,10 @@ body {
     margin-bottom:1.5em;
 }
 
+.footer-start{
+    padding:2em;
+}
+
 .message-bar {
     padding: 0.2em;
     border-width: 1px;
@@ -124,6 +128,10 @@ body {
 }
 
 .captcha-position{
-    margin:1em 1em 1em 1em;
+    margin:1em;
 }
 /*-------------------*/
+
+.captcha-position-register {
+    margin: 1em 0 1em 0.6em;
+}

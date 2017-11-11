@@ -27,7 +27,7 @@
                         <label for="txtPassword" class="sr-only">Password</label>
                         <input class="form-control" type="password" id="txtPassword" name="password" placeholder="Password" required/>
                         <div class="captcha-position">
-                            <div class="g-recaptcha" data-sitekey="6LfGBzgUAAAAAO-3YLhS2R2L4kYDhAo9BqLlrxMt" data-callback="enableBtn"></div>
+                            <div class="g-recaptcha" data-sitekey="6LfGBzgUAAAAAO-3YLhS2R2L4kYDhAo9BqLlrxMt" data-callback="enableLoginBtn"></div>
                         </div>
                         <button type="submit" class="btn btn-lg btn-primary btn-block" id="login" name="login">Log In</button>
                     </div>
@@ -47,7 +47,7 @@
         $('#login').prop("disabled", true);
     });
 
-    function enableBtn() {
+    function enableLoginBtn() {
         $('#login').prop("disabled", false);
     }
 </script>
