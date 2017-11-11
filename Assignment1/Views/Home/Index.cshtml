@@ -6,5 +6,20 @@
 <div class="jumbotron">
     <div class="container">
         <h1>DocReview</h1>
+        <p>Upload your documents and have them reviewed for <strong>free</strong></p>
+    </div>
+</div>
+<div class="container">
+    <div class="text-center">
+        @if (Context.User.Identity.IsAuthenticated)
+        {
+
+        }
+        else
+        {
+            @Html.ActionLink("Register", "Register", "Users", null, htmlAttributes: new { @class = "btn btn-lg btn-primary" }) 
+            <em> or </em> 
+            @Html.ActionLink("Log In", "Login", "Accounts", null, htmlAttributes: new { @class = "btn btn-lg btn-primary" })
+        }
     </div>
 </div>

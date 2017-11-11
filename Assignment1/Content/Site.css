@@ -136,3 +136,9 @@ body {
     margin: 1em;
     margin-left:7.6em !important;
 }
+
+.jumbotron {
+    margin-top: -0.97em;
+    background-color: #273D5E !important;
+    color:white !important;
+}
