@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BusinessLogic;
-using System.Web.Security;
 using System.Net;
 using Newtonsoft.Json.Linq;
+using System.Web.Security;
 
 namespace Assignment1.Controllers
 {
@@ -48,6 +48,7 @@ namespace Assignment1.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult SignOut()
         {
             FormsAuthentication.SignOut();
