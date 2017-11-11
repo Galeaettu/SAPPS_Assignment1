@@ -133,5 +133,6 @@ body {
 /*-------------------*/
 
 .captcha-position-register {
-    margin: 1em 0 1em 0.6em;
+    margin: 1em;
+    margin-left:7.6em !important;
 }

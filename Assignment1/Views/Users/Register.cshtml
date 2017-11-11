@@ -3,82 +3,83 @@
 @{
     ViewBag.Title = "Register";
 }
+<div class="container">
+    <h2>Register</h2>
+    <hr />
+    @if (ViewData["message"] != null)
+    {
+        <div class="alert alert-warning text-center">
+            @ViewData["message"]
+        </div>
+    }
+    @if (ViewData["error_message"] != null)
+    {
+        <div class="alert alert-danger text-center">
+            @ViewData["error_message"]
+        </div>
+    }
+    @if (ViewData["success_message"] != null)
+    {
+        <div class="alert alert-success text-center">
+            @ViewData["success_message"]
+        </div>
+    }
+    <div class="row grid-divider">
+        <div class="col-sm-6">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-3 col-md-offset-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-<h2>Register</h2>
-<hr />
-@if (ViewData["message"] != null)
-{
-    <div class="alert alert-warning text-center">
-        @ViewData["message"]
-    </div>
-}
-@if (ViewData["error_message"] != null)
-{
-    <div class="alert alert-danger text-center">
-        @ViewData["error_message"]
-    </div>
-}
-@if (ViewData["success_message"] != null)
-{
-    <div class="alert alert-success text-center">
-        @ViewData["success_message"]
-    </div>
-}
-<div class="row grid-divider">
-    <div class="col-sm-6">
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-            <div class="form-horizontal">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-4">
-                        @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-3 col-md-offset-2" })
+                        <div class="col-md-4">
+                            @*@Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })*@
+                            @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-4">
-                        @*@Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })*@
-                        @Html.PasswordFor(model => model.Password, new { @class = "form-control" } )
-                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3 col-md-offset-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-4">
-                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Surname, htmlAttributes: new { @class = "control-label col-md-3 col-md-offset-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.Surname, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="captcha-position-register col-md-offset-2">
+                        <div class="g-recaptcha" data-sitekey="6LfGBzgUAAAAAO-3YLhS2R2L4kYDhAo9BqLlrxMt" data-callback="enableRegisterBtn"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-7 col-md-offset-2">
+                            <button type="submit" class="btn btn-lg btn-primary btn-block" id="register" name="register">Register</button>
+                        </div>
                     </div>
                 </div>
+            }
+        </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Surname, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-4">
-                        @Html.EditorFor(model => model.Surname, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="captcha-position-register">
-                    <div class="g-recaptcha" data-sitekey="6LfGBzgUAAAAAO-3YLhS2R2L4kYDhAo9BqLlrxMt" data-callback="enableRegisterBtn"></div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-7">
-                        <button type="submit" class="btn btn-lg btn-primary btn-block" id="register" name="register">Register</button>
-                    </div>
-                </div>
+        <div class="col-sm-6">
+            <div class="col-padding text-center">
+                <h2>Already have an account?</h2>
+                @Html.ActionLink("Log In", "Login", "Accounts", null, htmlAttributes: new { @class = "btn btn-lg btn-primary" })
             </div>
-        }
-    </div>
-
-    <div class="col-sm-6">
-        <div class="col-padding text-center">
-            <h2>Already have an account?</h2>
-            @Html.ActionLink("Log In", "Login", "Accounts", null, htmlAttributes: new { @class = "btn btn-lg btn-primary" })
         </div>
     </div>
 </div>
