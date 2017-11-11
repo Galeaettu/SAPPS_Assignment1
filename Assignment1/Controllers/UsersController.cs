@@ -37,12 +37,9 @@ namespace Assignment1.Controllers
         public ActionResult Register(User u)
         {
             UsersOperations uo = new UsersOperations();
-            var response = Request["g-recaptcha-response"];
-            string secretKey = "6LfGBzgUAAAAAH3mHW5T_hveNRdaDC5VkA23qG1L";
-            var client = new WebClient();
-            var result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
-            var obj = JObject.Parse(result);
-            var status = (bool)obj.SelectToken("success");
+
+            bool status = new AccountsController().VerifyCaptcha(this);
+
             if (status == false)
                 ViewData["error_message"] = "Google reCaptcha validation failed";
 
