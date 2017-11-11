@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccess;
 using Common;
+using System.Web;
+using System.Net;
 
 namespace BusinessLogic
 {
