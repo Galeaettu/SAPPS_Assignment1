@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -47,12 +48,26 @@ namespace Assignment1.Controllers
             {
                 try
                 {
-                    if (ModelState.IsValid)
+                    if ((u.Password.Length >= 6) && (u.Password.Length <= 15))
                     {
-                        uo.Register(u);
+                        if(Regex.IsMatch(u.Password, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15}$"))
+                        {
+                            if (ModelState.IsValid)
+                            {
+                                uo.Register(u);
 
-                        ViewData["success_message"] = "User registered successfully";
-                        ModelState.Clear();
+                                ViewData["success_message"] = "User registered successfully";
+                                ModelState.Clear();
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Password", "Passwords must contain at least one digit, one uppercase and one lowercase");
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Password", "Passwords must be between 6 and 15 characters long");
                     }
                 }
                 catch (UsernameExistsException ex)
