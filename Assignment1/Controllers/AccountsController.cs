@@ -31,7 +31,6 @@ namespace Assignment1.Controllers
 
             if (status == false)
                 ViewData["error_message"] = "Google reCaptcha validation failed";
-
             if (status)
             {
                 if (new UsersOperations().Login(username, password) == true)

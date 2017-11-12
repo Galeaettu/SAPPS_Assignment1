@@ -21,6 +21,7 @@ namespace Common
             this.Documents = new HashSet<Document>();
             this.Documents1 = new HashSet<Document>();
             this.Roles = new HashSet<Role>();
+            this.LoginAttempts = new HashSet<LoginAttempt>();
         }
     
         public string Username { get; set; }
@@ -36,5 +37,7 @@ namespace Common
         public virtual ICollection<Document> Documents1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Role> Roles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LoginAttempt> LoginAttempts { get; set; }
     }
 }

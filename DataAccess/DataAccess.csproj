@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="ConnectionClass.cs" />
     <Compile Include="DocumentsRepository.cs" />
+    <Compile Include="LoginAttemptsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsersRepository.cs" />
   </ItemGroup>

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="a100588Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="a100588Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Comments">
           <Key>
             <PropertyRef Name="Id" />
@@ -24,6 +24,16 @@
           <Property Name="FilePath" Type="text" />
           <Property Name="Username_fk" Type="varchar" MaxLength="50" />
           <Property Name="Signature" Type="text" />
+        </EntityType>
+        <EntityType Name="LoginAttempts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username_fk" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Attempt" Type="int" />
+          <Property Name="Time" Type="datetime" />
+          <Property Name="Blocked" Type="bit" />
         </EntityType>
         <EntityType Name="ReviewingPermissions">
           <Key>
@@ -107,6 +117,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_LoginAttempts_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LoginAttempts" Type="Self.LoginAttempts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="LoginAttempts">
+              <PropertyRef Name="Username_fk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ReviewingPermissions_Documents">
           <End Role="Documents" Type="Self.Documents" Multiplicity="1" />
           <End Role="ReviewingPermissions" Type="Self.ReviewingPermissions" Multiplicity="*" />
@@ -164,6 +188,7 @@
         <EntityContainer Name="a100588ModelStoreContainer">
           <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Documents" EntityType="Self.Documents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoginAttempts" EntityType="Self.LoginAttempts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ReviewingPermissions" EntityType="Self.ReviewingPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
@@ -180,6 +205,10 @@
           <AssociationSet Name="FK_Documents_Users" Association="Self.FK_Documents_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Documents" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LoginAttempts_Users" Association="Self.FK_LoginAttempts_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="LoginAttempts" EntitySet="LoginAttempts" />
           </AssociationSet>
           <AssociationSet Name="FK_ReviewingPermissions_Documents" Association="Self.FK_ReviewingPermissions_Documents">
             <End Role="Documents" EntitySet="Documents" />
@@ -198,8 +227,7 @@
             <End Role="UserRoles" EntitySet="UserRoles" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="a100588Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -258,6 +286,7 @@
           <NavigationProperty Name="Documents" Relationship="Self.FK_Documents_Users" FromRole="Users" ToRole="Documents" />
           <NavigationProperty Name="Documents1" Relationship="Self.ReviewingPermissions" FromRole="Users" ToRole="Documents" />
           <NavigationProperty Name="Roles" Relationship="Self.UserRoles" FromRole="Users" ToRole="Roles" />
+          <NavigationProperty Name="LoginAttempts" Relationship="a100588Model.FK_LoginAttempts_Users" FromRole="User" ToRole="LoginAttempt" />
         </EntityType>
         <Association Name="FK_Comments_Documents">
           <End Role="Documents" Type="Self.Document" Multiplicity="0..1">
@@ -333,7 +362,37 @@
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
+          <EntitySet Name="LoginAttempts" EntityType="a100588Model.LoginAttempt" />
+          <AssociationSet Name="FK_LoginAttempts_Users" Association="a100588Model.FK_LoginAttempts_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="LoginAttempt" EntitySet="LoginAttempts" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="LoginAttempt">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username_fk" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Attempt" Type="Int32" />
+          <Property Name="Time" Type="DateTime" Precision="3" />
+          <Property Name="Blocked" Type="Boolean" />
+          <NavigationProperty Name="User" Relationship="a100588Model.FK_LoginAttempts_Users" FromRole="LoginAttempt" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_LoginAttempts_Users">
+          <End Type="a100588Model.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="a100588Model.LoginAttempt" Role="LoginAttempt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="LoginAttempt">
+              <PropertyRef Name="Username_fk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -407,6 +466,17 @@
               <ScalarProperty Name="Username" ColumnName="Username" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="LoginAttempts">
+            <EntityTypeMapping TypeName="a100588Model.LoginAttempt">
+              <MappingFragment StoreEntitySet="LoginAttempts">
+                <ScalarProperty Name="Blocked" ColumnName="Blocked" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Attempt" ColumnName="Attempt" />
+                <ScalarProperty Name="Username_fk" ColumnName="Username_fk" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
