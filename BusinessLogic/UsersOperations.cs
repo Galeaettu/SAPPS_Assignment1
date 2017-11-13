@@ -52,7 +52,7 @@ namespace BusinessLogic
             {
                 string userIp = loginAttempts.GetIP();
 
-                if ((loginAttempts.DoesAttemptExist(username) == false ) && (loginAttempts.DoesAttemptExist(userIp) == false))
+                if (loginAttempts.DoesUsernameAttemptExist(username) == false )
                 {
                     LoginAttempt l = new LoginAttempt
                     {
@@ -60,39 +60,89 @@ namespace BusinessLogic
                         Attempt = 1,
                         Time = DateTime.Now,
                         Blocked = false,
-                        Ip_Address = userIp
                     };
-                    loginAttempts.AddAttempt(l);
+                    loginAttempts.AddUsernameAttempt(l);
                 }
                 else
                 {
-                    LoginAttempt old;
+                    LoginAttempt oldusername;
 
-                    if (loginAttempts.DoesAttemptExist(username) == true)
+                    if (loginAttempts.DoesUsernameAttemptExist(username) == true)
                     {
-                        old = loginAttempts.GetAttempt(username);
+                        oldusername = loginAttempts.GetUsernameAttempt(username);
+                        bool usernameBlockCheck = (oldusername.Attempt >= 2) ? true : false;
 
-
+                        LoginAttempt updateUsername = new LoginAttempt
+                        {
+                            Username = username,
+                            Attempt = oldusername.Attempt++,
+                            Time = oldusername.Time,
+                            Blocked = usernameBlockCheck,
+                        };
+                        loginAttempts.UpdateUsernameAttempt(oldusername, updateUsername);
                     }
-                    else
-                    {
-                        old = loginAttempts.GetAttempt(userIp);
-                    }
 
-                    LoginAttempt update = new LoginAttempt
+                }
+
+                if (loginAttempts.DoesIpAttemptExist(userIp) == false)
+                {
+                    IpAttempt i = new IpAttempt
                     {
-                        Username = username,
-                        Attempt = old.Attempt++,
+                        Attempt = 1,
                         Time = DateTime.Now,
                         Blocked = false,
                         Ip_Address = userIp
                     };
-                    loginAttempts.UpdateAttempt(old, update);
+                    loginAttempts.AddIpAttempt(i);
+                }
+                else
+                {
+                    IpAttempt oldIp;
+
+                    if (loginAttempts.DoesIpAttemptExist(userIp) == true)
+                    {
+                        oldIp = loginAttempts.GetIpAttempt(userIp);
+                        bool ipBlockCheck = (oldIp.Attempt >= 2) ? true : false;
+
+                        IpAttempt updateIp = new IpAttempt
+                        {
+                            Ip_Address = userIp,
+                            Attempt = oldIp.Attempt++,
+                            Time = oldIp.Time,
+                            Blocked = ipBlockCheck,
+                        };
+                        loginAttempts.UpdateIpAttempt(oldIp, updateIp);
+                    }                    
 
                 }
-                return false;
+                return validLogin;
             }
         }
+
+        public bool IsBlocked(string username)
+        {
+            LoginAttemptsRepository loginAttempts = new LoginAttemptsRepository();
+            string userIp = loginAttempts.GetIP();
+
+            bool usernameBlocked = false;
+            bool ipBlocked = false;
+
+            if (loginAttempts.DoesUsernameAttemptExist(username) == true)
+            {
+                LoginAttempt l = loginAttempts.GetUsernameAttempt(username);
+                TimeSpan elapsed = DateTime.Now.Subtract((DateTime)l.Time);
+                usernameBlocked = (elapsed.TotalMinutes > 15) ? false : true;
+            }
+            if (loginAttempts.DoesIpAttemptExist(userIp) == true)
+            {
+                IpAttempt i = loginAttempts.GetIpAttempt(userIp);
+                TimeSpan elapsed = DateTime.Now.Subtract((DateTime)i.Time);
+                ipBlocked = (elapsed.TotalMinutes > 15) ? false : true;
+            }
+            return (usernameBlocked || ipBlocked);
+        }
+
+       
 
         #endregion
 
@@ -137,6 +187,15 @@ namespace BusinessLogic
             {
                 ur.AllocateRoleToUser(u, r);
             }
+        }
+
+        public void Unblock(string username, string password)
+        {
+            LoginAttemptsRepository loginAttempts = new LoginAttemptsRepository();
+
+            string userIp = loginAttempts.GetIP();
+            
+            //  delete row
         }
 
         #endregion

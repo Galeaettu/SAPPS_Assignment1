@@ -15,35 +15,76 @@ namespace DataAccess
 
         }
 
-        public List<LoginAttempt> GetAttempts()
+        public List<LoginAttempt> GetUsernameAttempts()
         {
             return Entity.LoginAttempts.ToList();
         }
 
-        public LoginAttempt GetAttempt(string keyword)
+        public List<IpAttempt> GetIpAttempts()
         {
-            return Entity.LoginAttempts.SingleOrDefault(x => x.Username == keyword || x.Ip_Address == keyword);
+            return Entity.IpAttempts.ToList();
         }
 
-        public bool DoesAttemptExist(string keyword)
+        public LoginAttempt GetUsernameAttempt(string username)
         {
-            return (GetAttempt(keyword) == null) ? false : true;
+            return Entity.LoginAttempts.SingleOrDefault(x => x.Username == username);
         }
 
-        public void AddAttempt(LoginAttempt l)
+        public IpAttempt GetIpAttempt(string address)
+        {
+            return Entity.IpAttempts.SingleOrDefault(x => x.Ip_Address == address);
+        }
+
+        public bool DoesUsernameAttemptExist(string username)
+        {
+            return (GetUsernameAttempt(username) == null) ? false : true;
+        }
+
+        public bool DoesIpAttemptExist(string address)
+        {
+            return (GetIpAttempt(address) == null) ? false : true;
+        }
+
+        public void AddUsernameAttempt(LoginAttempt l)
         {
             Entity.LoginAttempts.Add(l);
             Entity.SaveChanges();
         }
 
-        public void UpdateAttempt(LoginAttempt old, LoginAttempt updated)
+        public void AddIpAttempt(IpAttempt i)
+        {
+            Entity.IpAttempts.Add(i);
+            Entity.SaveChanges();
+        }
+
+        public void UpdateUsernameAttempt(LoginAttempt old, LoginAttempt updated)
         {
             old.Username = updated.Username;
             old.Time = updated.Time;
             old.Blocked = updated.Blocked;
-            old.Ip_Address = updated.Ip_Address;
             Entity.SaveChanges();
         }
+
+        public void UpdateIpAttempt(IpAttempt old, IpAttempt updated)
+        {
+            old.Ip_Address = updated.Ip_Address;
+            old.Time = updated.Time;
+            old.Blocked = updated.Blocked;
+            Entity.SaveChanges();
+        }
+
+        public void DeleteUsernameAttempt(string username)
+        {
+            Entity.LoginAttempts.Remove(GetUsernameAttempt(username));
+            Entity.SaveChanges();
+        }
+
+        public void DeleteIpAttempt(string address)
+        {
+            Entity.IpAttempts.Remove(GetIpAttempt(address));
+            Entity.SaveChanges();
+        }
+
 
         public string GetIP()
         {

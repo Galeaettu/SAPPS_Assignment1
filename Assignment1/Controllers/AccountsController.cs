@@ -27,22 +27,30 @@ namespace Assignment1.Controllers
         [HttpPost]
         public ActionResult Login(string username, string password)
         {
-            bool status = new AccountsController().VerifyCaptcha(this);
-
-            if (status == false)
-                ViewData["error_message"] = "Google reCaptcha validation failed";
-            if (status)
+            if (new UsersOperations().IsBlocked(username))
             {
-                if (new UsersOperations().Login(username, password) == true)
+                ViewData["error_message"] = "You are blocked";
+            }
+            else
+            {
+                bool status = new AccountsController().VerifyCaptcha(this);
+
+                if (status == false)
+                    ViewData["error_message"] = "Google reCaptcha validation failed";
+                if (status)
                 {
-                    FormsAuthentication.SetAuthCookie(username, true);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ViewData["message"] = "An invalid username or password was entered. Please try again.";
+                    if (new UsersOperations().Login(username, password) == true)
+                    {
+                        FormsAuthentication.SetAuthCookie(username, true);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ViewData["message"] = "An invalid username or password was entered. Please try again.";
+                    }
                 }
             }
+
             return View();
         }
 
