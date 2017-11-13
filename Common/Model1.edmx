@@ -30,10 +30,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Username_fk" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Attempt" Type="int" />
           <Property Name="Time" Type="datetime" />
           <Property Name="Blocked" Type="bit" />
+          <Property Name="Ip_Address" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="ReviewingPermissions">
           <Key>
@@ -103,20 +104,6 @@
               <PropertyRef Name="Username" />
             </Principal>
             <Dependent Role="Documents">
-              <PropertyRef Name="Username_fk" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LoginAttempts_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="LoginAttempts" Type="Self.LoginAttempts" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Username" />
-            </Principal>
-            <Dependent Role="LoginAttempts">
               <PropertyRef Name="Username_fk" />
             </Dependent>
           </ReferentialConstraint>
@@ -195,10 +182,6 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Documents" EntitySet="Documents" />
           </AssociationSet>
-          <AssociationSet Name="FK_LoginAttempts_Users" Association="Self.FK_LoginAttempts_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="LoginAttempts" EntitySet="LoginAttempts" />
-          </AssociationSet>
           <AssociationSet Name="FK_ReviewingPermissions_Documents" Association="Self.FK_ReviewingPermissions_Documents">
             <End Role="Documents" EntitySet="Documents" />
             <End Role="ReviewingPermissions" EntitySet="ReviewingPermissions" />
@@ -265,7 +248,6 @@
           <NavigationProperty Name="Documents" Relationship="Self.FK_Documents_Users" FromRole="Users" ToRole="Documents" />
           <NavigationProperty Name="Documents1" Relationship="Self.ReviewingPermissions" FromRole="Users" ToRole="Documents" />
           <NavigationProperty Name="Roles" Relationship="Self.UserRoles" FromRole="Users" ToRole="Roles" />
-          <NavigationProperty Name="LoginAttempts" Relationship="a100588Model.FK_LoginAttempts_Users" FromRole="User" ToRole="LoginAttempt" />
         </EntityType>
         <Association Name="FK_Comments_Documents">
           <End Role="Documents" Type="Self.Document" Multiplicity="0..1">
@@ -341,36 +323,18 @@
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
           <EntitySet Name="LoginAttempts" EntityType="a100588Model.LoginAttempt" />
-          <AssociationSet Name="FK_LoginAttempts_Users" Association="a100588Model.FK_LoginAttempts_Users">
-            <End Role="User" EntitySet="Users" />
-            <End Role="LoginAttempt" EntitySet="LoginAttempts" />
-          </AssociationSet>
         </EntityContainer>
         <EntityType Name="LoginAttempt">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Username_fk" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Attempt" Type="Int32" />
           <Property Name="Time" Type="DateTime" Precision="3" />
           <Property Name="Blocked" Type="Boolean" />
-          <NavigationProperty Name="User" Relationship="a100588Model.FK_LoginAttempts_Users" FromRole="LoginAttempt" ToRole="User" />
+          <Property Name="Ip_Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <Association Name="FK_LoginAttempts_Users">
-          <End Type="a100588Model.User" Role="User" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="a100588Model.LoginAttempt" Role="LoginAttempt" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Username" />
-            </Principal>
-            <Dependent Role="LoginAttempt">
-              <PropertyRef Name="Username_fk" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -436,10 +400,11 @@
           <EntitySetMapping Name="LoginAttempts">
             <EntityTypeMapping TypeName="a100588Model.LoginAttempt">
               <MappingFragment StoreEntitySet="LoginAttempts">
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Ip_Address" ColumnName="Ip_Address" />
                 <ScalarProperty Name="Blocked" ColumnName="Blocked" />
                 <ScalarProperty Name="Time" ColumnName="Time" />
                 <ScalarProperty Name="Attempt" ColumnName="Attempt" />
-                <ScalarProperty Name="Username_fk" ColumnName="Username_fk" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

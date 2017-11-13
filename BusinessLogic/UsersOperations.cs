@@ -8,6 +8,7 @@ using Common;
 using System.Web;
 using System.Net;
 using System.Web.Security;
+using System.Net.Sockets;
 
 namespace BusinessLogic
 {
@@ -38,7 +39,38 @@ namespace BusinessLogic
         public bool Login(string username, string password)
         {
             //logic to validate how many attempts have been tried by this username to log in.
-            return new UsersRepository().Login(username, new Encryption().HashString(password));
+            //return new UsersRepository().Login(username, new Encryption().HashString(password));
+
+            LoginAttemptsRepository loginAttempts = new LoginAttemptsRepository();
+
+            bool validLogin = new UsersRepository().Login(username, new Encryption().HashString(password));
+            if (validLogin == true)
+            {
+                return validLogin;
+            }
+            else
+            {
+                string userIp = loginAttempts.GetIP();
+
+                if ((loginAttempts.DoesAttemptExist(username) == false ) && (loginAttempts.DoesAttemptExist(userIp) == false))
+                {
+                    LoginAttempt l = new LoginAttempt
+                    {
+                        Username = username,
+                        Attempt = 1,
+                        Time = DateTime.Now,
+                        Blocked = false,
+                        Ip_Address = userIp
+                    };
+                    loginAttempts.AddAttempt(l);
+                }
+                else
+                {
+                    LoginAttempt l = loginAttempts.GetAttempt(username);
+
+                }
+                return false;
+            }
         }
 
         #endregion
@@ -85,7 +117,6 @@ namespace BusinessLogic
                 ur.AllocateRoleToUser(u, r);
             }
         }
-
 
         #endregion
     }

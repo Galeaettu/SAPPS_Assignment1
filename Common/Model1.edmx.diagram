@@ -15,7 +15,6 @@
         <AssociationConnector Association="a100588Model.ReviewingPermissions" ManuallyRouted="false" />
         <AssociationConnector Association="a100588Model.UserRoles" ManuallyRouted="false" />
         <EntityTypeShape EntityType="a100588Model.LoginAttempt" Width="1.5" PointX="10" PointY="2.75" />
-        <AssociationConnector Association="a100588Model.FK_LoginAttempts_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

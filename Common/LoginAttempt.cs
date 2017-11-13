@@ -15,11 +15,10 @@ namespace Common
     public partial class LoginAttempt
     {
         public int Id { get; set; }
-        public string Username_fk { get; set; }
         public Nullable<int> Attempt { get; set; }
         public Nullable<System.DateTime> Time { get; set; }
         public Nullable<bool> Blocked { get; set; }
-    
-        public virtual User User { get; set; }
+        public string Ip_Address { get; set; }
+        public string Username { get; set; }
     }
 }
