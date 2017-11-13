@@ -66,7 +66,28 @@ namespace BusinessLogic
                 }
                 else
                 {
-                    LoginAttempt l = loginAttempts.GetAttempt(username);
+                    LoginAttempt old;
+
+                    if (loginAttempts.DoesAttemptExist(username) == true)
+                    {
+                        old = loginAttempts.GetAttempt(username);
+
+
+                    }
+                    else
+                    {
+                        old = loginAttempts.GetAttempt(userIp);
+                    }
+
+                    LoginAttempt update = new LoginAttempt
+                    {
+                        Username = username,
+                        Attempt = old.Attempt++,
+                        Time = DateTime.Now,
+                        Blocked = false,
+                        Ip_Address = userIp
+                    };
+                    loginAttempts.UpdateAttempt(old, update);
 
                 }
                 return false;

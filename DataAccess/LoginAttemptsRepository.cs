@@ -36,6 +36,15 @@ namespace DataAccess
             Entity.SaveChanges();
         }
 
+        public void UpdateAttempt(LoginAttempt old, LoginAttempt updated)
+        {
+            old.Username = updated.Username;
+            old.Time = updated.Time;
+            old.Blocked = updated.Blocked;
+            old.Ip_Address = updated.Ip_Address;
+            Entity.SaveChanges();
+        }
+
         public string GetIP()
         {
             string strHostName = "";

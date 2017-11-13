@@ -12,12 +12,12 @@ namespace Common
     using System;
     using System.Collections.Generic;
     
-    public partial class LoginAttempt
+    public partial class IpAttempt
     {
         public int Id { get; set; }
+        public string Ip_Address { get; set; }
         public Nullable<int> Attempt { get; set; }
         public Nullable<System.DateTime> Time { get; set; }
         public Nullable<bool> Blocked { get; set; }
-        public string Username { get; set; }
     }
 }

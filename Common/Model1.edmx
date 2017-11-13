@@ -25,6 +25,16 @@
           <Property Name="Username_fk" Type="varchar" MaxLength="50" />
           <Property Name="Signature" Type="text" />
         </EntityType>
+        <EntityType Name="IpAttempts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ip_Address" Type="varchar" MaxLength="50" />
+          <Property Name="Attempt" Type="int" />
+          <Property Name="Time" Type="datetime" />
+          <Property Name="Blocked" Type="bit" />
+        </EntityType>
         <EntityType Name="LoginAttempts">
           <Key>
             <PropertyRef Name="Id" />
@@ -34,7 +44,6 @@
           <Property Name="Attempt" Type="int" />
           <Property Name="Time" Type="datetime" />
           <Property Name="Blocked" Type="bit" />
-          <Property Name="Ip_Address" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="ReviewingPermissions">
           <Key>
@@ -165,6 +174,7 @@
         <EntityContainer Name="a100588ModelStoreContainer">
           <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Documents" EntityType="Self.Documents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IpAttempts" EntityType="Self.IpAttempts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginAttempts" EntityType="Self.LoginAttempts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ReviewingPermissions" EntityType="Self.ReviewingPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
@@ -323,6 +333,7 @@
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
           <EntitySet Name="LoginAttempts" EntityType="a100588Model.LoginAttempt" />
+          <EntitySet Name="IpAttempts" EntityType="a100588Model.IpAttempt" />
         </EntityContainer>
         <EntityType Name="LoginAttempt">
           <Key>
@@ -332,8 +343,17 @@
           <Property Name="Attempt" Type="Int32" />
           <Property Name="Time" Type="DateTime" Precision="3" />
           <Property Name="Blocked" Type="Boolean" />
-          <Property Name="Ip_Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="IpAttempt">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ip_Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Attempt" Type="Int32" />
+          <Property Name="Time" Type="DateTime" Precision="3" />
+          <Property Name="Blocked" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -401,10 +421,20 @@
             <EntityTypeMapping TypeName="a100588Model.LoginAttempt">
               <MappingFragment StoreEntitySet="LoginAttempts">
                 <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="Ip_Address" ColumnName="Ip_Address" />
                 <ScalarProperty Name="Blocked" ColumnName="Blocked" />
                 <ScalarProperty Name="Time" ColumnName="Time" />
                 <ScalarProperty Name="Attempt" ColumnName="Attempt" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IpAttempts">
+            <EntityTypeMapping TypeName="a100588Model.IpAttempt">
+              <MappingFragment StoreEntitySet="IpAttempts">
+                <ScalarProperty Name="Blocked" ColumnName="Blocked" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Attempt" ColumnName="Attempt" />
+                <ScalarProperty Name="Ip_Address" ColumnName="Ip_Address" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
