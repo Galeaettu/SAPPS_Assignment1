@@ -80,6 +80,10 @@ namespace Assignment1.Controllers
                     ViewData["error_message"] = "User registration failed";
                 }
             }
+            else
+            {
+                ViewData["error_message"] = "Invalid reCaptcha";
+            }
             return View();
         }
     }

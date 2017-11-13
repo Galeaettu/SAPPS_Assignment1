@@ -8,7 +8,6 @@
         <EntityTypeShape EntityType="a100588Model.Comment" Width="1.5" PointX="7.5" PointY="4.375" IsExpanded="true" />
         <EntityTypeShape EntityType="a100588Model.Document" Width="1.5" PointX="5.25" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="a100588Model.Role" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="a100588Model.sysdiagram" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="a100588Model.User" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
         <AssociationConnector Association="a100588Model.FK_Comments_Documents" ManuallyRouted="false" />
         <AssociationConnector Association="a100588Model.FK_Comments_Users" ManuallyRouted="false" />
