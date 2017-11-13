@@ -43,11 +43,6 @@ namespace Assignment1.Controllers
                     ViewData["message"] = "An invalid username or password was entered. Please try again.";
                 }
             }
-            else
-            {
-                ViewData["error_message"] = "Invalid reCaptcha";
-            }
-
             return View();
         }
 
