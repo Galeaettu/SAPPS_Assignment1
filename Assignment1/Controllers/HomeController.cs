@@ -23,5 +23,10 @@ namespace Assignment1.Controllers
         {
             return View();
         }
+
+        public ActionResult ServerError()
+        {
+            return View();
+        }
     }
 }

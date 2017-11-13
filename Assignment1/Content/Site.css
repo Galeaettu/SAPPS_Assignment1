@@ -137,8 +137,27 @@ body {
     margin-left:7.6em !important;
 }
 
-.jumbotron {
+.jumbotron-header {
     margin-top: -0.97em;
     background-color: #273D5E !important;
     color:white !important;
+}
+
+.jumbotron-error {
+    margin-top: -0.97em;
+    background-color: #985F6F !important;
+    color: white !important;
+}
+
+.jumbotron-error a:link{
+    color: #eee;
+}
+.jumbotron-error a:visited{
+    color: #eee;
+}
+.jumbotron-error a:hover {
+    color: white;
+}
+.jumbotron-error a:active {
+    color: white;
 }
