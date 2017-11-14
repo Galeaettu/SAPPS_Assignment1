@@ -130,19 +130,73 @@ namespace BusinessLogic
             if (loginAttempts.DoesUsernameAttemptExist(username) == true)
             {
                 LoginAttempt l = loginAttempts.GetUsernameAttempt(username);
-                TimeSpan elapsed = DateTime.Now.Subtract((DateTime)l.Time);
-                usernameBlocked = (elapsed.TotalMinutes > 15) ? false : true;
+                if ((bool)l.Blocked)
+                {
+                    TimeSpan elapsed = DateTime.Now.Subtract((DateTime)l.Time);
+                    usernameBlocked = (elapsed.Minutes >= 15) ? false : true;
+                    if (usernameBlocked == false)
+                        loginAttempts.DeleteUsernameAttempt(l);
+                }
             }
             if (loginAttempts.DoesIpAttemptExist(userIp) == true)
             {
                 IpAttempt i = loginAttempts.GetIpAttempt(userIp);
-                TimeSpan elapsed = DateTime.Now.Subtract((DateTime)i.Time);
-                ipBlocked = (elapsed.TotalMinutes > 15) ? false : true;
+                if ((bool)i.Blocked)
+                {
+                    TimeSpan elapsed = DateTime.Now.Subtract((DateTime)i.Time);
+                    ipBlocked = (elapsed.Minutes >= 15) ? false : true;
+                    if (ipBlocked == false)
+                        loginAttempts.DeleteIpAttempt(i);
+                }
             }
             return (usernameBlocked || ipBlocked);
         }
 
-       
+        public int RemainingBlocked(string username)
+        {
+            LoginAttemptsRepository loginAttempts = new LoginAttemptsRepository();
+            string userIp = loginAttempts.GetIP();
+            TimeSpan elapsedUsername = TimeSpan.Zero;
+            TimeSpan elapsedIp = TimeSpan.Zero;
+
+            TimeSpan result = TimeSpan.Zero;
+
+            if (loginAttempts.DoesUsernameAttemptExist(username) == true)
+            {
+                LoginAttempt l = loginAttempts.GetUsernameAttempt(username);
+                elapsedUsername = DateTime.Now.Subtract((DateTime)l.Time);
+            }
+            if (loginAttempts.DoesIpAttemptExist(userIp) == true)
+            {
+                IpAttempt i = loginAttempts.GetIpAttempt(userIp);
+                elapsedIp = DateTime.Now.Subtract((DateTime)i.Time);
+            }
+
+            if ((elapsedUsername > TimeSpan.Zero) && (elapsedIp == TimeSpan.Zero))
+            {
+                result = elapsedUsername;
+            }else if ((elapsedIp > TimeSpan.Zero) && (elapsedUsername == TimeSpan.Zero))
+            {
+                result = elapsedUsername;
+            }
+            else
+            {
+                int compare = TimeSpan.Compare(elapsedUsername, elapsedIp);
+                switch (compare)
+                {
+                    case -1:
+                        result = elapsedUsername;
+                        break;
+                    case 0:
+                        result = elapsedUsername;
+                        break;
+                    case 1:
+                        result = elapsedUsername;
+                        break;
+                }
+            }
+            return (15 - (int)result.TotalMinutes);
+        }
 
         #endregion
 
@@ -188,16 +242,6 @@ namespace BusinessLogic
                 ur.AllocateRoleToUser(u, r);
             }
         }
-
-        public void Unblock(string username, string password)
-        {
-            LoginAttemptsRepository loginAttempts = new LoginAttemptsRepository();
-
-            string userIp = loginAttempts.GetIP();
-            
-            //  delete row
-        }
-
         #endregion
     }
 }

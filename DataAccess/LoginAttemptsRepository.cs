@@ -73,15 +73,15 @@ namespace DataAccess
             Entity.SaveChanges();
         }
 
-        public void DeleteUsernameAttempt(string username)
+        public void DeleteUsernameAttempt(LoginAttempt l)
         {
-            Entity.LoginAttempts.Remove(GetUsernameAttempt(username));
+            Entity.LoginAttempts.Remove(l);
             Entity.SaveChanges();
         }
 
-        public void DeleteIpAttempt(string address)
+        public void DeleteIpAttempt(IpAttempt i)
         {
-            Entity.IpAttempts.Remove(GetIpAttempt(address));
+            Entity.IpAttempts.Remove(i);
             Entity.SaveChanges();
         }
 

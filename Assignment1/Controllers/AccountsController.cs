@@ -29,7 +29,8 @@ namespace Assignment1.Controllers
         {
             if (new UsersOperations().IsBlocked(username))
             {
-                ViewData["error_message"] = "You are blocked";
+                int time = new UsersOperations().RemainingBlocked(username);
+                ViewData["error_message"] = "You are blocked for "+time+" more minutes. Try again later.";
             }
             else
             {
