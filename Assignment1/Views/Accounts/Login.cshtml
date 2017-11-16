@@ -22,6 +22,7 @@
             <div class="col-sm-6">
                 <div class="col-padding">
                     <form class="form-signin" method="post" action="/Accounts/Login">
+                        @Html.AntiForgeryToken()
                         <div class="form-size">
                             <label for="txtUsername" class="sr-only">Username</label>
                             <input type="text" class="form-control" id="txtUsername" name="username" placeholder="Username" required autofocus />

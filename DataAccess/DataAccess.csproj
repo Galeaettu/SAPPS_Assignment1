@@ -50,6 +50,7 @@
     <Compile Include="ConnectionClass.cs" />
     <Compile Include="DocumentsRepository.cs" />
     <Compile Include="LoginAttemptsRepository.cs" />
+    <Compile Include="LogsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsersRepository.cs" />
   </ItemGroup>

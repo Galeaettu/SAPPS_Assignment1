@@ -16,6 +16,7 @@
         <AssociationConnector Association="a100588Model.UserRoles" ManuallyRouted="false" />
         <EntityTypeShape EntityType="a100588Model.LoginAttempt" Width="1.5" PointX="7.375" PointY="0.75" />
         <EntityTypeShape EntityType="a100588Model.IpAttempt" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="a100588Model.Log" Width="1.5" PointX="9.625" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

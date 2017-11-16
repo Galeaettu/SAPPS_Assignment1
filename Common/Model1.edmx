@@ -45,6 +45,16 @@
           <Property Name="Time" Type="datetime" />
           <Property Name="Blocked" Type="bit" />
         </EntityType>
+        <EntityType Name="Logs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Message" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Controller" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Exception" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="ReviewingPermissions">
           <Key>
             <PropertyRef Name="Username_fk" />
@@ -176,6 +186,7 @@
           <EntitySet Name="Documents" EntityType="Self.Documents" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IpAttempts" EntityType="Self.IpAttempts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginAttempts" EntityType="Self.LoginAttempts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Logs" EntityType="Self.Logs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ReviewingPermissions" EntityType="Self.ReviewingPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
@@ -334,6 +345,7 @@
           </AssociationSet>
           <EntitySet Name="LoginAttempts" EntityType="a100588Model.LoginAttempt" />
           <EntitySet Name="IpAttempts" EntityType="a100588Model.IpAttempt" />
+          <EntitySet Name="Logs" EntityType="a100588Model.Log" />
         </EntityContainer>
         <EntityType Name="LoginAttempt">
           <Key>
@@ -354,6 +366,16 @@
           <Property Name="Attempt" Type="Int32" />
           <Property Name="Time" Type="DateTime" Precision="3" />
           <Property Name="Blocked" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Controller" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Exception" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -435,6 +457,17 @@
                 <ScalarProperty Name="Time" ColumnName="Time" />
                 <ScalarProperty Name="Attempt" ColumnName="Attempt" />
                 <ScalarProperty Name="Ip_Address" ColumnName="Ip_Address" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logs">
+            <EntityTypeMapping TypeName="a100588Model.Log">
+              <MappingFragment StoreEntitySet="Logs">
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Exception" ColumnName="Exception" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

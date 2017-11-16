@@ -42,7 +42,19 @@ namespace Assignment1.Controllers
             bool status = new AccountsController().VerifyCaptcha(this);
 
             if (status == false)
+            {
                 ViewData["error_message"] = "Google reCaptcha validation failed";
+
+                new LogsOperations().AddLog(
+                    new Log()
+                    {
+                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                        Exception = "reCaptcha Failed",
+                        Time = DateTime.Now,
+                        Message = "reCaptcha Failed"
+                    }
+                );
+            }
 
             if (status)
             {
@@ -59,25 +71,76 @@ namespace Assignment1.Controllers
                                 ViewData["success_message"] = "User registered successfully";
                                 ModelState.Clear();
                             }
+                            else
+                            {
+                                new LogsOperations().AddLog(
+                                    new Log()
+                                    {
+                                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                        Exception = "Invalid Model State",
+                                        Time = DateTime.Now,
+                                        Message = "Invalid Model State"
+                                    }
+                                );
+                            }
                         }
                         else
                         {
                             ModelState.AddModelError("Password", "Passwords must contain at least one digit, one uppercase and one lowercase");
+
+                            new LogsOperations().AddLog(
+                                new Log()
+                                {
+                                    Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                    Exception = "Weak password strength",
+                                    Time = DateTime.Now,
+                                    Message = "Weak password strength"
+                                }
+                            );
                         }
                     }
                     else
                     {
                         ModelState.AddModelError("Password", "Passwords must be between 6 and 15 characters long");
+
+                        new LogsOperations().AddLog(
+                            new Log()
+                            {
+                                Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                Exception = "Invalid password length",
+                                Time = DateTime.Now,
+                                Message = "Invalid password length"
+                            }
+                        );
                     }
                 }
                 catch (UsernameExistsException ex)
                 {
                     ModelState.AddModelError("Username", ex.Message);
+
+                    new LogsOperations().AddLog(
+                        new Log()
+                        {
+                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                            Exception = ex.InnerException.ToString(),
+                            Time = DateTime.Now,
+                            Message = ex.Message.ToString()
+                        }
+                    );
                 }
                 catch (Exception ex)
                 {
-                    // Add log to error
                     ViewData["error_message"] = "User registration failed";
+
+                    new LogsOperations().AddLog(
+                        new Log()
+                        {
+                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                            Exception = ex.InnerException.ToString(),
+                            Time = DateTime.Now,
+                            Message = ex.Message.ToString()
+                        }
+                    );
                 }
             }
             return View();
