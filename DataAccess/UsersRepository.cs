@@ -24,6 +24,11 @@ namespace DataAccess
             return Entity.Users.Where(x => x.Name.Contains(keyword) || x.Surname.Contains(keyword)).ToList();
         }
 
+        public List<User> GetSingleUser(string username)
+        {
+            return Entity.Users.Where(x => x.Username == username).ToList();
+        }
+
         public void AddUser(User u)
         {
             Entity.Users.Add(u);

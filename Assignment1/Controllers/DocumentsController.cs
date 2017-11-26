@@ -35,5 +35,23 @@ namespace Assignment1.Controllers
             dop.AddDocument(User.Identity.Name, d);
             return View();
         }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AllocateReviewer(string reviewer, int documentId)
+        {
+            DocumentsOperations dops = new DocumentsOperations();
+
+            try
+            {
+                dops.AllocateReviewerToDocument(documentId, reviewer);
+            }
+            catch (Exception ex)
+            {
+                ViewData["message"] = ex.Message;
+            }
+            return View();
+        }
     }
 }

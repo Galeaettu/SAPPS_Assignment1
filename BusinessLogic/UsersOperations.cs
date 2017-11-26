@@ -22,6 +22,13 @@ namespace BusinessLogic
             return ur.GetUsers();
         }
 
+        public List<User> GetAllUsers(string exceptUsername)
+        {
+            UsersRepository ur = new UsersRepository();
+            List<User> user = ur.GetSingleUser(exceptUsername);
+            return ur.GetUsers().Except(user).ToList();
+        }
+
         public List<User> Search(string keyword)
         {
             UsersRepository ur = new UsersRepository();
