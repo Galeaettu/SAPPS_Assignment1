@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="DocumentsOperations.cs" />
     <Compile Include="LogsOperations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsersOperations.cs" />

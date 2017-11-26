@@ -122,7 +122,7 @@ namespace Assignment1.Controllers
                         new Log()
                         {
                             Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
-                            Exception = ex.InnerException.ToString(),
+                            Exception = ex.Message.ToString(),
                             Time = DateTime.Now,
                             Message = ex.Message.ToString()
                         }
@@ -136,7 +136,7 @@ namespace Assignment1.Controllers
                         new Log()
                         {
                             Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
-                            Exception = ex.InnerException.ToString(),
+                            Exception = ex.Message.ToString(),
                             Time = DateTime.Now,
                             Message = ex.Message.ToString()
                         }

@@ -18,36 +18,56 @@ namespace DataAccess
             return Entity.Documents.ToList();
         }
 
-        public List<Document> GetDocuments(string username)
+        public List<Document> GetDocuments(User u)
         {
-            return Entity.Documents.Where(x => x.Username_fk == username).ToList();
+            //return Entity.Documents.Where(x => x.Username_fk == username).ToList();
+            return u.Documents.ToList();
         }
 
-        public List<Document> GetDocument(int id)
+        public Document GetDocument(int id)
         {
-            return Entity.Documents.Where(x => x.Id == id).ToList();
+            return Entity.Documents.SingleOrDefault(x => x.Id == id);
         }
 
-        /// <summary>
-        /// Allocate a Document to be available to a Reviewer.
-        /// </summary>
-        /// <param name="u">Reviewer to view the document</param>
-        /// <param name="d">The document to be viewed</param>
+        public void AddDocument(Document d, User u)
+        {
+            d.Username_fk = u.Username;
+            Entity.Documents.Add(d);
+            Entity.SaveChanges();
+        }
+
         public void AllocateDocumentToUser(User u, Document d)
         {
             u.Documents.Add(d);
             Entity.SaveChanges();
         }
 
-        /// <summary>
-        /// Checks if the user is already allocated to the document.
-        /// </summary>
-        /// <param name="u">User</param>
-        /// <param name="d">Document</param>
-        /// <returns></returns>
+        public void DeallocateDocumentFromUser(User u, Document d)
+        {
+            u.Documents.Remove(d);
+            Entity.SaveChanges();
+        }
+
+        public void AllocateReviewerToDocument(User u, Document d)
+        {
+            d.Users.Add(u);
+            Entity.SaveChanges();
+        }
+
+        public void DeAllocateReviewerToDocument(User u, Document d)
+        {
+            d.Users.Remove(u);
+            Entity.SaveChanges();
+        }
+
         public bool IsUserAllocatedToDocument(User u, Document d)
         {
             return u.Documents.Contains(d);
+        }
+
+        public bool IsReviewerAllocatedToDocument(User u, Document d)
+        {
+            return d.Users.Contains(u);
         }
 
         public void Delete(Document d)
