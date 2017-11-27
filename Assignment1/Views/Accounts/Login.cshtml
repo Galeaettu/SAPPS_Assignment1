@@ -18,6 +18,12 @@
                 @ViewData["error_message"]
             </div>
         }
+        @if (TempData["success_message"] != null)
+        {
+            <div class="alert alert-success text-center">
+                @TempData["success_message"]
+            </div>
+        }
         <div class="row grid-divider">
             <div class="col-sm-6">
                 <div class="col-padding">

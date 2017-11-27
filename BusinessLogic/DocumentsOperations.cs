@@ -51,12 +51,11 @@ namespace BusinessLogic
             }
         }
 
-        public void DeAllocateReviewerToDocument(int document, string username)
+        public void DeAllocateReviewerFromDocument(int document, string username)
         {
-            UsersRepository ur = new UsersRepository();
             DocumentsRepository dr = new DocumentsRepository();
 
-            User u = ur.GetUser(username);
+            User u = dr.GetUser(username);
             Document d = dr.GetDocument(document);
 
             if (!dr.IsReviewerAllocatedToDocument(u, d))
@@ -65,7 +64,7 @@ namespace BusinessLogic
             }
             else
             {
-                dr.DeAllocateReviewerToDocument(u, d);
+                dr.DeAllocateReviewerFromDocument(u, d);
             }
         }
 

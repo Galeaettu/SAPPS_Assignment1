@@ -59,7 +59,7 @@ namespace DataAccess
             Entity.SaveChanges();
         }
 
-        public void DeAllocateReviewerToDocument(User u, Document d)
+        public void DeAllocateReviewerFromDocument(User u, Document d)
         {
             d.Users.Remove(u);
             Entity.SaveChanges();
@@ -80,6 +80,15 @@ namespace DataAccess
             Entity.Documents.Remove(d);
             Entity.SaveChanges();
         }
+        
+        public List<Comment> GetComments()
+        {
+            return Entity.Comments.ToList();
+        }
 
+        public List<Comment> GetComments(Document d)
+        {
+            return d.Comments.ToList();
+        }
     }
 }

@@ -67,9 +67,10 @@ namespace Assignment1.Controllers
                             if (ModelState.IsValid)
                             {
                                 uo.Register(u);
-
                                 ViewData["success_message"] = "User registered successfully";
+                                TempData["success_message"] = "User registered successfully";
                                 ModelState.Clear();
+                                return RedirectToAction("Login", "Accounts");
                             }
                             else
                             {
