@@ -47,11 +47,12 @@ namespace Assignment1.Controllers
             {
                 dops.AllocateReviewerToDocument(documentId, reviewer);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                ViewData["message"] = ex.Message;
+                TempData["message"] = ex.Message;
             }
-            return View();
+
+            return RedirectToAction("Index", "Documents");
         }
     }
 }

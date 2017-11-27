@@ -36,10 +36,9 @@ namespace BusinessLogic
 
         public void AllocateReviewerToDocument(int document, string username)
         {
-            UsersRepository ur = new UsersRepository();
             DocumentsRepository dr = new DocumentsRepository();
 
-            User u = ur.GetUser(username);
+            User u = dr.GetUser(username);
             Document d = dr.GetDocument(document);
 
             if (dr.IsReviewerAllocatedToDocument(u,d))

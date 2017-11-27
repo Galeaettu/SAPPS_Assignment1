@@ -7,25 +7,20 @@
 <div class="container">
     <h2>Index</h2>
     <hr />
-    @if (ViewData["message"] != null)
+    @if (TempData["message"] != null)
     {
         <div class="alert alert-warning text-center">
-            @ViewData["message"]
+            @TempData["message"]
         </div>
     }
     <p>
         @Html.ActionLink("Add", "Add")
     </p>
-    <table class="table">
+    <table class="table table-hover">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FilePath)
-            </th>
-            <th></th>
-            <th></th>
+            <th class="col-sm-8">Title</th>
+            <th class="col-sm-3"></th>
+            <th class="col-sm-1">Options</th>
         </tr>
 
         @foreach (var item in Model)
@@ -35,17 +30,20 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FilePath)
+                    <button class="btn btn-default pull-right">Comments <span class="badge">4</span></button>
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                </td>
-                <td>
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#docModal_@item.Id">
-                        Launch demo modal
-                    </button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" data-toggle="modal" data-target="#docModal_@item.Id">Reviewing Permissions</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Delete Document </a></li>
+                        </ul>
+                    </div>
                 </td>
             </tr>
         }

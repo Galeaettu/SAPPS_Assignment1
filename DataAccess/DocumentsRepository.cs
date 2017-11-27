@@ -48,6 +48,11 @@ namespace DataAccess
             Entity.SaveChanges();
         }
 
+        public User GetUser(string username)
+        {
+            return Entity.Users.SingleOrDefault(x => x.Username == username);
+        }
+
         public void AllocateReviewerToDocument(User u, Document d)
         {
             d.Users.Add(u);

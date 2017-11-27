@@ -140,9 +140,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ReviewingPermissions_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="ReviewingPermissions" Type="Self.ReviewingPermissions" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
