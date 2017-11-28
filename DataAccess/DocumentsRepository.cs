@@ -55,6 +55,7 @@ namespace DataAccess
 
         public void AllocateReviewerToDocument(User u, Document d)
         {
+            
             d.Users.Add(u);
             Entity.SaveChanges();
         }
@@ -89,6 +90,13 @@ namespace DataAccess
         public List<Comment> GetComments(Document d)
         {
             return d.Comments.ToList();
+        }
+
+        public void AllocateComment(User u, Document d, Comment c)
+        {
+            d.Comments.Add(c);
+            u.Comments.Add(c);
+            Entity.SaveChanges();
         }
     }
 }

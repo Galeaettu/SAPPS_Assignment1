@@ -139,6 +139,7 @@
     <Content Include="Views\Home\ServerError.cshtml" />
     <Content Include="Views\Documents\Add.cshtml" />
     <Content Include="Views\Documents\Index.cshtml" />
+    <Content Include="Views\Documents\Comment.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

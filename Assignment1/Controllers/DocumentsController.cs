@@ -67,5 +67,36 @@ namespace Assignment1.Controllers
 
             return RedirectToAction("Index", "Documents");
         }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult Comment(int documentId)
+        {
+            DocumentsOperations dops = new DocumentsOperations();
+            Document d = dops.GetDocument(documentId);
+            ViewData["document_title"] = d.Title;
+            ViewData["document_id"] = d.Id;
+
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Comment(int document, Comment c)
+        {
+            DocumentsOperations dops = new DocumentsOperations();
+            Document d = dops.GetDocument(document);
+
+            try
+            {
+                dops.AddComment(d, c, User.Identity.Name);
+                ModelState.Clear();
+            }catch(Exception ex)
+            {
+                ViewData["error_message"] = ex.Message;
+            }
+            return View();
+        }
     }
 }

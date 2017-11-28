@@ -20,6 +20,20 @@ namespace BusinessLogic
             return dr.GetDocuments(u);
         }
 
+        public Document GetDocument(int documentid)
+        {
+            DocumentsRepository dr = new DocumentsRepository();
+
+            return dr.GetDocument(documentid);
+        }
+
+        public List<Comment> GetComments(int documentId)
+        {
+            DocumentsRepository dr = new DocumentsRepository();
+            Document d = dr.GetDocument(documentId);
+            return dr.GetComments(d);
+        }
+
         #endregion
 
         #region Write
@@ -66,6 +80,30 @@ namespace BusinessLogic
             {
                 dr.DeAllocateReviewerFromDocument(u, d);
             }
+        }
+
+        public void AddComment(Document d, Comment c, string username)
+        {
+            DocumentsRepository dr = new DocumentsRepository();
+            User u = dr.GetUser(username);
+            //if (dr.IsReviewerAllocatedToDocument(u, d))
+            //{
+                try
+                {
+                    c.Username_fk = username;
+                    c.Document_fk = d.Id;
+                    c.DatePlaced = DateTime.Now;
+                    dr.AllocateComment(u, d, c);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Cannot add comment");
+                }
+            //}
+            //else
+            //{
+            //    throw new Exception("Reviewer is not allocated to the document.");
+            //}
         }
 
         #endregion
