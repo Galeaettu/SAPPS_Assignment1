@@ -57,4 +57,18 @@
         </div>
     }
     <hr />
+
+
+    @foreach (var doc in new BusinessLogic.DocumentsOperations().GetComments((int)ViewData["document_id"]))
+    {
+        <div class="thumbnail comment">
+            <div class="media">
+                <h4 class="media-heading"><strong>@doc.Username_fk</strong></h4>
+                <p>@doc.Comment1</p>
+                <kbd class="pull-right">@doc.DatePlaced</kbd>
+            </div>
+        </div>
+    }
+    
+    
 </div>

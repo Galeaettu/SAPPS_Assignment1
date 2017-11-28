@@ -161,3 +161,17 @@ body {
 .jumbotron-error a:active {
     color: white;
 }
+
+.comment {
+    border-left: 5px solid #273D5E !important;
+    margin: 1em;
+    background-color: #f5f5f5 !important;
+}
+
+kbd{
+    background-color: #222 !important;
+    border-radius:5px;
+    padding:0 0.3em 0 0.3em;
+    color: white;
+    font-size: 8pt !important;
+}
