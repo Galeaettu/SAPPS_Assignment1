@@ -20,6 +20,14 @@ namespace BusinessLogic
             return dr.GetDocuments(u);
         }
 
+        public List<Document> GetReviewDocuments(string username)
+        {
+            DocumentsRepository dr = new DocumentsRepository();
+
+            User u = new UsersRepository().GetUser(username);
+            return dr.GetReviewDocuments(u);
+        }
+
         public Document GetDocument(int documentid)
         {
             DocumentsRepository dr = new DocumentsRepository();
@@ -32,6 +40,15 @@ namespace BusinessLogic
             DocumentsRepository dr = new DocumentsRepository();
             Document d = dr.GetDocument(documentId);
             return dr.GetComments(d);
+        }
+
+        public bool IsReviewerAllocatedToDocument(string username, int documentId)
+        {
+            DocumentsRepository dr = new DocumentsRepository();
+            User u = dr.GetUser(username);
+            Document d = dr.GetDocument(documentId);
+
+            return dr.IsReviewerAllocatedToDocument(u, d);
         }
 
         #endregion

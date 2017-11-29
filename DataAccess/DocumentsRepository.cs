@@ -24,6 +24,14 @@ namespace DataAccess
             return u.Documents.ToList();
         }
 
+        public List<Document> GetReviewDocuments(User u)
+        {
+            //List<Document> myDocs = Entity.Documents.Where(x => x.Users.Contains(u)).ToList();
+
+            List<Document> myDocs = Entity.Documents.Where(x => x.Users.Select(s => s.Username).Contains(u.Username)).ToList();
+            return myDocs;
+        }
+
         public Document GetDocument(int id)
         {
             return Entity.Documents.SingleOrDefault(x => x.Id == id);

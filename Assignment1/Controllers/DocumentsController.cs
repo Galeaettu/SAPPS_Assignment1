@@ -20,6 +20,15 @@ namespace Assignment1.Controllers
         }
 
         [Authorize]
+        public ActionResult Review()
+        {
+            DocumentsOperations dops = new DocumentsOperations();
+            var myList = dops.GetReviewDocuments(User.Identity.Name);
+
+            return View(myList);
+        }
+
+        [Authorize]
         [HttpGet]
         public ActionResult Add()
         {
@@ -87,7 +96,7 @@ namespace Assignment1.Controllers
         {
             DocumentsOperations dops = new DocumentsOperations();
             Document d = dops.GetDocument(document);
-
+            ViewData["document_id"] = d.Id;
             try
             {
                 dops.AddComment(d, c, User.Identity.Name);
