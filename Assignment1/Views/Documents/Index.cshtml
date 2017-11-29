@@ -19,10 +19,22 @@
             @TempData["error_message"]
         </div>
     }
+    @if (ViewData["error_message"] != null)
+    {
+        <div class="alert alert-danger text-center">
+            @ViewData["error_message"]
+        </div>
+    }
     @if (ViewData["success_message"] != null)
     {
         <div class="alert alert-success text-center">
             @ViewData["success_message"]
+        </div>
+    }
+    @if (TempData["success_message"] != null)
+    {
+        <div class="alert alert-success text-center">
+            @TempData["success_message"]
         </div>
     }
     <p>

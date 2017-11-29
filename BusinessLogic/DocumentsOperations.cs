@@ -45,10 +45,19 @@ namespace BusinessLogic
         public bool IsReviewerAllocatedToDocument(string username, int documentId)
         {
             DocumentsRepository dr = new DocumentsRepository();
+            if (!dr.DoesDocumentExist(documentId))
+            {
+                throw new DocumentExistsException("Document does not exist");
+            }
+
             User u = dr.GetUser(username);
             Document d = dr.GetDocument(documentId);
-
             return dr.IsReviewerAllocatedToDocument(u, d);
+        }
+
+        public bool DoesDocumentExist(int documentId)
+        {
+            return new DocumentsRepository().DoesDocumentExist(documentId);
         }
 
         #endregion
@@ -102,9 +111,15 @@ namespace BusinessLogic
         public void AddComment(Document d, Comment c, string username)
         {
             DocumentsRepository dr = new DocumentsRepository();
-            User u = dr.GetUser(username);
-            //if (dr.IsReviewerAllocatedToDocument(u, d))
-            //{
+            UsersRepository ur = new UsersRepository
+            {
+                Entity = dr.Entity
+            };
+            User u = ur.GetUser(username);
+            d = dr.GetDocument(d.Id);
+
+            if (dr.IsReviewerAllocatedToDocument(u, d))
+            {
                 try
                 {
                     c.Username_fk = username;
@@ -116,11 +131,11 @@ namespace BusinessLogic
                 {
                     throw new Exception("Cannot add comment");
                 }
-            //}
-            //else
-            //{
-            //    throw new Exception("Reviewer is not allocated to the document.");
-            //}
+            }
+            else
+            {
+                throw new Exception("Reviewer is not allocated to the document.");
+            }
         }
 
         #endregion

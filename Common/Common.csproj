@@ -55,6 +55,7 @@
     <Compile Include="Document.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="DocumentExistsException.cs" />
     <Compile Include="Encryption.cs" />
     <Compile Include="IpAttempt.cs">
       <DependentUpon>Model1.tt</DependentUpon>

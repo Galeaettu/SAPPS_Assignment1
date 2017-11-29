@@ -46,7 +46,17 @@ namespace Assignment1.Controllers
             }
             else
             {
-                bool status = new AccountsController().VerifyCaptcha(this);
+                bool status = false;
+                try
+                {
+                    status = new AccountsController().VerifyCaptcha(this);
+                }
+                catch (Exception e)
+                {
+                    ViewData["error_message"] = e.Message;
+
+                    return View();
+                }
 
                 if (status == false)
                 {
@@ -68,7 +78,7 @@ namespace Assignment1.Controllers
                     if (new UsersOperations().Login(username, password) == true)
                     {
                         FormsAuthentication.SetAuthCookie(username, true);
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Documents");
                     }
                     else
                     {
@@ -99,12 +109,29 @@ namespace Assignment1.Controllers
         [NonAction]
         public bool VerifyCaptcha(Controller controller)
         {
-            var response = controller.Request["g-recaptcha-response"];
-            string secretKey = "6LfGBzgUAAAAAH3mHW5T_hveNRdaDC5VkA23qG1L";
-            var client = new WebClient();
-            var result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
-            var obj = JObject.Parse(result);
-            var status = (bool)obj.SelectToken("success");
+            var status = false;
+            try
+            {
+                var response = controller.Request["g-recaptcha-response"];
+                string secretKey = "6LfGBzgUAAAAAH3mHW5T_hveNRdaDC5VkA23qG1L";
+                var client = new WebClient();
+                var result = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secretKey, response));
+                var obj = JObject.Parse(result);
+                status = (bool)obj.SelectToken("success");
+            }
+            catch(Exception e)
+            {
+                new LogsOperations().AddLog(
+                    new Common.Log()
+                    {
+                        Controller = "VerifyCaptcha",
+                        Exception = "reCaptcha failure",
+                        Time = DateTime.Now,
+                        Message = "reCaptcha failure"
+                    }
+                );
+                throw new Exception("Unable to verify reCaptcha");
+            }
             return status;
         }
     }

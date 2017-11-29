@@ -79,14 +79,47 @@ namespace Assignment1.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult Comment(int documentId)
+        public ActionResult Comment(int? documentId)
         {
-            DocumentsOperations dops = new DocumentsOperations();
-            Document d = dops.GetDocument(documentId);
-            ViewData["document_title"] = d.Title;
-            ViewData["document_id"] = d.Id;
+            if (documentId != null)
+            {
+                int documentIdToFind = (int)documentId;
+                DocumentsOperations dops = new DocumentsOperations();
+                if (dops.DoesDocumentExist(documentIdToFind))
+                {
+                    try
+                    {
+                        Document d = dops.GetDocument(documentIdToFind);
+                        if (dops.IsReviewerAllocatedToDocument(User.Identity.Name, documentIdToFind) || d.Username_fk == User.Identity.Name)
+                        {
+                            ViewData["document_title"] = d.Title;
+                            ViewData["document_id"] = d.Id;
 
-            return View();
+                            return View();
+                        }
+                        else
+                        {
+                            TempData["error_message"] = "You are not a reviewer of this document";
+                            return RedirectToAction("Index");
+                        }
+                    }
+                    catch (DocumentExistsException ex)
+                    {
+                        TempData["error_message"] = ex.Message;
+                        return RedirectToAction("Index");
+                    }
+                }
+                else
+                {
+                    TempData["error_message"] = "Document does not exist";
+                    return RedirectToAction("Index");
+                }
+            }
+            else
+            {
+                TempData["error_message"] = "No document selected";
+                return RedirectToAction("Index");
+            }
         }
 
         [Authorize]
