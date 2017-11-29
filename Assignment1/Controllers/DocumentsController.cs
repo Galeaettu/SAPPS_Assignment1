@@ -72,6 +72,15 @@ namespace Assignment1.Controllers
             catch(Exception ex)
             {
                 TempData["error_message"] = ex.Message;
+                new LogsOperations().AddLog(
+                    new Log()
+                    {
+                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                        Exception = ex.Message,
+                        Time = DateTime.Now,
+                        Message = reviewer + "Faliure allocating reviewer"
+                    }
+                );
             }
 
             return RedirectToAction("Index", "Documents");
@@ -100,24 +109,61 @@ namespace Assignment1.Controllers
                         else
                         {
                             TempData["error_message"] = "You are not a reviewer of this document";
+                            new LogsOperations().AddLog(
+                                new Log()
+                                {
+                                    Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                    Exception = "User is not document's reviewer",
+                                    Time = DateTime.Now,
+                                    Message = "User is not document's reviewer"
+                                }
+                            );
                             return RedirectToAction("Index");
                         }
                     }
                     catch (DocumentExistsException ex)
                     {
                         TempData["error_message"] = ex.Message;
+                        new LogsOperations().AddLog(
+                            new Log()
+                            {
+                                Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                Exception = ex.Message,
+                                Time = DateTime.Now,
+                                Message = ex.Message
+                            }
+                        );
+
                         return RedirectToAction("Index");
                     }
                 }
                 else
                 {
                     TempData["error_message"] = "Document does not exist";
+                    new LogsOperations().AddLog(
+                        new Log()
+                        {
+                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                            Exception = "Document does not exist",
+                            Time = DateTime.Now,
+                            Message = "Document does not exist"
+                        }
+                    );
                     return RedirectToAction("Index");
                 }
             }
             else
             {
                 TempData["error_message"] = "No document selected";
+                new LogsOperations().AddLog(
+                    new Log()
+                    {
+                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                        Exception = "No document selected",
+                        Time = DateTime.Now,
+                        Message = "No document selected"
+                    }
+                );
                 return RedirectToAction("Index");
             }
         }
@@ -134,9 +180,19 @@ namespace Assignment1.Controllers
             {
                 dops.AddComment(d, c, User.Identity.Name);
                 ModelState.Clear();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 ViewData["error_message"] = ex.Message;
+                new LogsOperations().AddLog(
+                    new Log()
+                    {
+                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                        Exception = ex.Message,
+                        Time = DateTime.Now,
+                        Message = "Adding comment exception"
+                    }
+                );
             }
             return View();
         }

@@ -10,7 +10,8 @@ namespace Common
     public class UserValidation
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Username cannot be blank")]
-        [StringLength(50, ErrorMessage = "Username must be shorter than 50 characters")]
+        [StringLength(50, ErrorMessage = "Username must be longer than 3 characters and shorter than 50 characters", MinimumLength = 3)]
+        [RegularExpression(@"^[A-Za-z0-9_]{3,50}$", ErrorMessage = "Username must only contain letters, numbers or an underscore")]
         public string Username { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password cannot be blank")]
