@@ -184,7 +184,7 @@ namespace BusinessLogic
                 result = elapsedUsername;
             }else if ((elapsedIp > TimeSpan.Zero) && (elapsedUsername == TimeSpan.Zero))
             {
-                result = elapsedUsername;
+                result = elapsedIp;
             }
             else
             {
