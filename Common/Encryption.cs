@@ -227,16 +227,54 @@ namespace Common
 
             return decryptFile.ToArray();
         }
-        public class SymmetricParameters
+
+        public byte[] HashBytes(byte[] file)
         {
-            public byte[] SecretKey { get; set; }
-            public byte[] IV { get; set; }
+            SHA256 myAlg = SHA256.Create(); //initialize the algorithm instance
+
+            byte[] digest = myAlg.ComputeHash(file); //hashing byte[] >> base64 bytes
+
+            return digest;
         }
 
-        public class AsymmetricParameters
+        public string DigitalSign(Stream file, string privateKey) // of the user who is uplaoding the document
         {
-            public string PublicKey { get; set; }
-            public string PrivateKey { get; set; }
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(privateKey); //privatekey from db
+
+            MemoryStream ms = new MemoryStream();
+            file.CopyTo(ms);
+            ms.Position = 0;
+            byte[] digest = HashBytes(ms.ToArray());
+
+            byte[] sigature = rsa.SignHash(digest, "SHA256");
+
+            return Convert.ToBase64String(sigature);
         }
+
+        public bool DigitalVerify(Stream file, string publicKey, string signature)
+        {
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(publicKey); //publicKey from db
+
+            MemoryStream ms = new MemoryStream();
+            file.CopyTo(ms);
+            ms.Position = 0;
+            byte[] digest = HashBytes(ms.ToArray());
+
+            return rsa.VerifyHash(digest, "SHA256", Convert.FromBase64String(signature));
+        }
+    }
+
+    public class SymmetricParameters
+    {
+        public byte[] SecretKey { get; set; }
+        public byte[] IV { get; set; }
+    }
+
+    public class AsymmetricParameters
+    {
+        public string PublicKey { get; set; }
+        public string PrivateKey { get; set; }
     }
 }
