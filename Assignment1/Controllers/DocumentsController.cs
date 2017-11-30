@@ -88,11 +88,45 @@ namespace Assignment1.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult Comment(int? documentId)
+        public ActionResult Comment(string documentId)
         {
             if (documentId != null)
             {
-                int documentIdToFind = (int)documentId;
+                int documentIdToFind = 0;
+                try
+                {
+                    documentIdToFind = Convert.ToInt32(new Encryption().DecryptString(documentId, User.Identity.Name));
+                }
+                catch(FormatException fe)
+                {
+                    TempData["error_message"] = "Document does not exist";
+
+                    new LogsOperations().AddLog(
+                        new Log()
+                        {
+                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                            Exception = fe.Message,
+                            Time = DateTime.Now,
+                            Message = "User tried to manually search for a document in the address bar"
+                        }
+                    );
+                    return RedirectToAction("Index");
+                }
+                catch(Exception ex)
+                {
+                    TempData["error_message"] = "Document unavailable";
+                    new LogsOperations().AddLog(
+                        new Log()
+                        {
+                            Controller = "Comment",
+                            Exception = ex.Message,
+                            Time = DateTime.Now,
+                            Message = "documentId decryption error"
+                        }
+                    );
+                    return RedirectToAction("Index");
+                }
+
                 DocumentsOperations dops = new DocumentsOperations();
                 if (dops.DoesDocumentExist(documentIdToFind))
                 {

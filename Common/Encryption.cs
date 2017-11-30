@@ -23,7 +23,7 @@ namespace Common
 
         public SymmetricParameters GenerateSymmetricParameters(string input)
         {
-            Rfc2898DeriveBytes rfc = new Rfc2898DeriveBytes(input, new byte[] { 20, 255, 1, 16, 54, 78, 68, 10, 52, 38 });
+            Rfc2898DeriveBytes rfc = new Rfc2898DeriveBytes(input, new byte[] { 20, 255, 1, 16, 54, 78, 68, 10, 52, 38, 20, 87, 91 });
 
             Rijndael myAlg = Rijndael.Create();
 
@@ -58,7 +58,7 @@ namespace Common
 
             encrypteddata = encrypteddata.Replace('=', '|');
             encrypteddata = encrypteddata.Replace('/', '_');
-            encrypteddata = encrypteddata.Replace('+', '*');
+            encrypteddata = encrypteddata.Replace('+', '¬');
 
             return encrypteddata;
         }
@@ -67,7 +67,7 @@ namespace Common
         {
             input = input.Replace('|', '=');
             input = input.Replace('_', '/');
-            input = input.Replace('*', '+');
+            input = input.Replace('¬', '+');
 
             SymmetricParameters myParameters = GenerateSymmetricParameters(passwordToBeUsedInSecreKey);
 

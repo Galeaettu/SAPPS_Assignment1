@@ -50,9 +50,9 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Message" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Message" Type="text" Nullable="false" />
           <Property Name="Controller" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Exception" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Exception" Type="text" Nullable="false" />
           <Property Name="Time" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="ReviewingPermissions">
@@ -370,9 +370,9 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Message" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Controller" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Exception" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Exception" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
