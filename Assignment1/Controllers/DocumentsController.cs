@@ -48,29 +48,68 @@ namespace Assignment1.Controllers
                 {
                     if (Path.GetExtension(filePath.FileName).ToLower().Equals(".docx"))
                     {
-                        string absolutePath = Server.MapPath("\\UploadedDocuments\\");
-                        string relativePath = "\\UploadedDocuments\\";
+                        if (filePath.ContentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                        {
+                            byte[] whitelist = new byte[] { 80, 75, 3, 4, 20, 0, 6, 0 };
+                            byte[] inputRead = new byte[8];
+                            filePath.InputStream.Read(inputRead, 0, 8);
 
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(filePath.FileName);
+                            bool flag = true;
+                            for (int i = 0; i < 8; i++)
+                            {
+                                if (whitelist[i] != inputRead[i])
+                                {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+                            if (flag == true)
+                            {
+                                if (filePath.ContentLength <= (1048576 * 5))
+                                {
+                                    string absolutePath = Server.MapPath("\\UploadedDocuments\\");
+                                    string relativePath = "\\UploadedDocuments\\";
 
-                        //d.Username_fk = User.Identity.Name;
-                        d.FilePath = relativePath + fileName; // saves path to the image in the database
-                        dops.AddDocument(User.Identity.Name, d);
-                        //document.SaveAs(absolutePath + fileName);
-                        filePath.InputStream.Position = 0;
-                        Stream s = new Encryption().HybridEncryptFile(filePath.InputStream, User.Identity.Name, new UsersOperations().GetUser(User.Identity.Name).PublicKey);
+                                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(filePath.FileName);
 
-                        s.Position = 0;
-                        FileStream fs = new FileStream(absolutePath + fileName, FileMode.CreateNew, FileAccess.Write);
-                        s.CopyTo(fs);
-                        fs.Close();
-                        ViewData["success_message"] = "Document uploaded sucessfully";
-                        ModelState.Clear();
+                                    //d.Username_fk = User.Identity.Name;
+                                    d.FilePath = relativePath + fileName; // saves path to the image in the database
+
+
+                                    //document.SaveAs(absolutePath + fileName);
+                                    filePath.InputStream.Position = 0;
+                                    Stream s = new Encryption().HybridEncryptFile(filePath.InputStream, User.Identity.Name, new UsersOperations().GetUser(User.Identity.Name).PublicKey);
+
+                                    FileStream fs = new FileStream(absolutePath + fileName, FileMode.CreateNew, FileAccess.Write);
+                                    s.CopyTo(fs);
+                                    fs.Close();
+
+                                    s.Position = 0;
+                                    d.Signature = new Encryption().DigitalSign(s, new UsersOperations().GetUser(User.Identity.Name).PrivateKey);
+                                    dops.AddDocument(User.Identity.Name, d);
+
+                                    ViewData["success_message"] = "Document uploaded sucessfully";
+                                    ModelState.Clear();
+                                }
+                                else
+                                {
+                                    ViewData["message"] = "The document must be smaller than 5MB";
+                                }
+                            }
+                            else
+                            {
+                                ViewData["message"] = "This is not a valid .docx file";
+                            }
+                        }
+                        else
+                        {
+                            ViewData["message"] = "This is not a valid .docx file";
+                        }
                     }
                     else
-                    {
-                        ViewData["message"] = "This file is not a document";
-                    }
+                        {
+                            ViewData["message"] = "This file is not a document";
+                        }
                 }
                 else
                 {
