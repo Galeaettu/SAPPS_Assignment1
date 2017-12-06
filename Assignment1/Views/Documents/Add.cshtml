@@ -52,6 +52,11 @@
                     <button type="submit" class="btn btn-lg btn-primary btn-block">Add Document</button>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-2">
+                    @Html.ActionLink("Back to Documents", "Index", "Documents", null, htmlAttributes: new { @class = "btn btn-lg btn-default" })
+                </div>
+            </div>
         </div>
     }
 </div>

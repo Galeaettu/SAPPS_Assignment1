@@ -2,6 +2,7 @@
 using Common;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -227,6 +228,59 @@ namespace Assignment1.Controllers
                         Message = "Adding comment exception"
                     }
                 );
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult UploadDocument()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult UploadDocument(Document d, HttpPostedFileBase document)
+        {
+            DocumentsOperations dops = new DocumentsOperations();
+            try
+            {
+                if (document != null)
+                {
+                    if (Path.GetExtension(document.FileName).ToLower().Equals(".docx"))
+                    {
+                        string absolutePath = Server.MapPath("\\Documents\\");
+                        string relativePath = "\\Documents\\";
+
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(document.FileName);
+
+                        d.Username_fk = HttpContext.User.Identity.Name;
+                        d.FilePath = relativePath + fileName; // saves path to the image in the database
+                        dops.UploadDocument(d);
+                        //document.SaveAs(absolutePath + fileName);
+                        document.InputStream.Position = 0;
+                        Stream s = new Encryption().HybridEncryptFile(document.InputStream, User.Identity.Name, new BusinessLogic.UsersOperations().GetUser(User.Identity.Name).PublicKey);
+
+                        s.Position = 0;
+                        FileStream fs = new FileStream(absolutePath + fileName, FileMode.CreateNew, FileAccess.Write);
+                        s.CopyTo(fs);
+                        fs.Close();
+                        ViewData["messagesuccess"] = "Article uploaded sucessfully";
+                    }
+                    else
+                    {
+                        ViewData["message"] = "This file is not a document";
+                    }
+                }
+                else
+                {
+                    ViewData["message"] = "Please select a document";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ViewData["message"] = ex.Message;
             }
             return View();
         }
