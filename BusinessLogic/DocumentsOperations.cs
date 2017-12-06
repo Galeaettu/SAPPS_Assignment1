@@ -60,9 +60,11 @@ namespace BusinessLogic
             return new DocumentsRepository().DoesDocumentExist(documentId);
         }
 
-        public bool DoesDocumentExist(string documentTitle)
+        public bool DoesDocumentExist(string title, string username)
         {
-            return new DocumentsRepository().DoesDocumentExist(documentTitle);
+            DocumentsRepository dr = new DocumentsRepository();
+
+            return new DocumentsRepository().DoesDocumentExist(title, username);
         }
 
         #endregion
@@ -77,14 +79,14 @@ namespace BusinessLogic
 
             User u = ur.GetUser(username);
 
-            if (!DoesDocumentExist(d.Title))
+            if (!DoesDocumentExist(d.Title, username))
             {
                 dr.AllocateDocumentToUser(u, d);
-                dr.AddDocument(d, u);
+                //dr.AddDocument(d, u);
             }
             else
             {
-                throw new Exception("Document already exists");
+                throw new DocumentExistsException("You already have a document with the same name");
             }
         }
 

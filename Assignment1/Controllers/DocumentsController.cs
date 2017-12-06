@@ -39,13 +39,52 @@ namespace Assignment1.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(Document d)
+        public ActionResult Add(Document d, HttpPostedFileBase filePath)
         {
-            DocumentsOperations dop = new DocumentsOperations();
-            dop.AddDocument(User.Identity.Name, d);
+            DocumentsOperations dops = new DocumentsOperations();
+            try
+            {
+                if (filePath != null)
+                {
+                    if (Path.GetExtension(filePath.FileName).ToLower().Equals(".docx"))
+                    {
+                        string absolutePath = Server.MapPath("\\UploadedDocuments\\");
+                        string relativePath = "\\UploadedDocuments\\";
 
-            ViewData["success_message"] = "Document added successfully";
-            ModelState.Clear();
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(filePath.FileName);
+
+                        //d.Username_fk = User.Identity.Name;
+                        d.FilePath = relativePath + fileName; // saves path to the image in the database
+                        dops.AddDocument(User.Identity.Name, d);
+                        //document.SaveAs(absolutePath + fileName);
+                        filePath.InputStream.Position = 0;
+                        Stream s = new Encryption().HybridEncryptFile(filePath.InputStream, User.Identity.Name, new UsersOperations().GetUser(User.Identity.Name).PublicKey);
+
+                        s.Position = 0;
+                        FileStream fs = new FileStream(absolutePath + fileName, FileMode.CreateNew, FileAccess.Write);
+                        s.CopyTo(fs);
+                        fs.Close();
+                        ViewData["success_message"] = "Document uploaded sucessfully";
+                        ModelState.Clear();
+                    }
+                    else
+                    {
+                        ViewData["message"] = "This file is not a document";
+                    }
+                }
+                else
+                {
+                    ViewData["message"] = "Please select a document";
+                }
+
+            }
+            catch (DocumentExistsException de)
+            {
+                ViewData["error_message"] = de.Message;
+            }catch (Exception ex)
+            {
+                ViewData["error_message"] = "Unable to add document";
+            }
             return View();
         }
 
@@ -230,59 +269,6 @@ namespace Assignment1.Controllers
                 );
             }
             return View();
-        }
-
-        [HttpGet]
-        public ActionResult UploadDocument()
-        {
-            return View();
-        }
-
-        [Authorize]
-        [HttpPost]
-        public ActionResult UploadDocument(Document d, HttpPostedFileBase document)
-        {
-            DocumentsOperations dops = new DocumentsOperations();
-            try
-            {
-                if (document != null)
-                {
-                    if (Path.GetExtension(document.FileName).ToLower().Equals(".docx"))
-                    {
-                        string absolutePath = Server.MapPath("\\UploadedDocuments\\");
-                        string relativePath = "\\UploadedDocuments\\";
-
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(document.FileName);
-
-                        //d.Username_fk = User.Identity.Name;
-                        d.FilePath = relativePath + fileName; // saves path to the image in the database
-                        dops.AddDocument(User.Identity.Name, d);
-                        //document.SaveAs(absolutePath + fileName);
-                        document.InputStream.Position = 0;
-                        Stream s = new Encryption().HybridEncryptFile(document.InputStream, User.Identity.Name, new UsersOperations().GetUser(User.Identity.Name).PublicKey);
-
-                        s.Position = 0;
-                        FileStream fs = new FileStream(absolutePath + fileName, FileMode.CreateNew, FileAccess.Write);
-                        s.CopyTo(fs);
-                        fs.Close();
-                        ViewData["success_message"] = "Document uploaded sucessfully";
-                    }
-                    else
-                    {
-                        ViewData["message"] = "This file is not a document";
-                    }
-                }
-                else
-                {
-                    ViewData["message"] = "Please select a document";
-                }
-
-            }
-            catch (Exception ex)
-            {
-                ViewData["message"] = ex.Message;
-            }
-            return View();
-        }
+        }      
     }
 }
