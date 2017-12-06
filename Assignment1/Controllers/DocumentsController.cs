@@ -249,23 +249,23 @@ namespace Assignment1.Controllers
                 {
                     if (Path.GetExtension(document.FileName).ToLower().Equals(".docx"))
                     {
-                        string absolutePath = Server.MapPath("\\Documents\\");
-                        string relativePath = "\\Documents\\";
+                        string absolutePath = Server.MapPath("\\UploadedDocuments\\");
+                        string relativePath = "\\UploadedDocuments\\";
 
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(document.FileName);
 
-                        d.Username_fk = HttpContext.User.Identity.Name;
+                        //d.Username_fk = User.Identity.Name;
                         d.FilePath = relativePath + fileName; // saves path to the image in the database
-                        dops.UploadDocument(d);
+                        dops.AddDocument(User.Identity.Name, d);
                         //document.SaveAs(absolutePath + fileName);
                         document.InputStream.Position = 0;
-                        Stream s = new Encryption().HybridEncryptFile(document.InputStream, User.Identity.Name, new BusinessLogic.UsersOperations().GetUser(User.Identity.Name).PublicKey);
+                        Stream s = new Encryption().HybridEncryptFile(document.InputStream, User.Identity.Name, new UsersOperations().GetUser(User.Identity.Name).PublicKey);
 
                         s.Position = 0;
                         FileStream fs = new FileStream(absolutePath + fileName, FileMode.CreateNew, FileAccess.Write);
                         s.CopyTo(fs);
                         fs.Close();
-                        ViewData["messagesuccess"] = "Article uploaded sucessfully";
+                        ViewData["success_message"] = "Document uploaded sucessfully";
                     }
                     else
                     {

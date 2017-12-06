@@ -219,6 +219,11 @@ namespace BusinessLogic
             else
             {
                 u.Password = new Encryption().HashString(u.Password);
+
+                AsymmetricParameters myParameters = new Encryption().GenerateAsymmetricParameters();
+                u.PublicKey = myParameters.PublicKey;
+                u.PrivateKey = myParameters.PrivateKey;
+
                 ur.AddUser(u);
                 ur.AllocateRoleToUser(u, ur.GetRole(1));
             }

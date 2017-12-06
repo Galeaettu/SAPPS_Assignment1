@@ -25,7 +25,7 @@
         </div>
     }
 
-    @using (Html.BeginForm())
+    @using (Html.BeginForm(new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 

@@ -86,6 +86,8 @@
           <Property Name="Password" Type="varchar" MaxLength="50" />
           <Property Name="Name" Type="varchar" MaxLength="50" />
           <Property Name="Surname" Type="varchar" MaxLength="50" />
+          <Property Name="PublicKey" Type="text" />
+          <Property Name="PrivateKey" Type="text" />
         </EntityType>
         <Association Name="FK_Comments_Documents">
           <End Role="Documents" Type="Self.Documents" Multiplicity="0..1">
@@ -267,6 +269,8 @@
           <NavigationProperty Name="Documents" Relationship="Self.FK_Documents_Users" FromRole="Users" ToRole="Documents" />
           <NavigationProperty Name="Documents1" Relationship="Self.ReviewingPermissions" FromRole="Users" ToRole="Documents" />
           <NavigationProperty Name="Roles" Relationship="Self.UserRoles" FromRole="Users" ToRole="Roles" />
+          <Property Name="PublicKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="PrivateKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_Comments_Documents">
           <End Role="Documents" Type="Self.Document" Multiplicity="0..1">
@@ -414,6 +418,8 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="a100588Model.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="PrivateKey" ColumnName="PrivateKey" />
+                <ScalarProperty Name="PublicKey" ColumnName="PublicKey" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Name" ColumnName="Name" />

@@ -37,9 +37,19 @@ namespace DataAccess
             return Entity.Documents.SingleOrDefault(x => x.Id == id);
         }
 
+        public Document GetDocument(string title)
+        {
+            return Entity.Documents.SingleOrDefault(x => x.Title == title);
+        }
+
         public bool DoesDocumentExist(int id)
         {
             return (GetDocument(id) == null) ? false : true;
+        }
+
+        public bool DoesDocumentExist(string title)
+        {
+            return (GetDocument(title) == null) ? false : true;
         }
 
         public void AddDocument(Document d, User u)
