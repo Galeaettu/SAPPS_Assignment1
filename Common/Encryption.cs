@@ -170,6 +170,8 @@ namespace Common
 
         public MemoryStream DecryptSymmetricallyFile(Stream input, SymmetricParameters myParameters)
         {
+            input.Position = 0;
+
             Rijndael myAlg = Rijndael.Create();
             myAlg.Key = myParameters.SecretKey;
             myAlg.IV = myParameters.IV;
@@ -198,6 +200,8 @@ namespace Common
             //4. you store the encrypted secret key(from no.3) + the encrypted iv (from no.3) + encrypted file content (from no.2)
 
             MemoryStream msEncryptedFile = new MemoryStream();
+            encryptedSecretKey.Position = 0;
+            encryptedIV.Position = 0;
             encryptedSecretKey.CopyTo(msEncryptedFile);
             encryptedIV.CopyTo(msEncryptedFile);
             encrypted.Position = 0;
@@ -208,6 +212,7 @@ namespace Common
 
         public byte[] HybridDecryptFile(Stream encryptedArticle, string privateKey)
         {
+            encryptedArticle.Position = 0;
             //1. Read the secret key //128 bytes
             byte[] encSecretKey = new byte[128];
             encryptedArticle.Read(encSecretKey, 0, 128);
@@ -224,6 +229,7 @@ namespace Common
             MemoryStream decryptIV = DecryptAsymmetricallyKey(encIv, privateKey);
             //6. decrypt the file content read in no.3 using the decrypted secret key and decrypted iv
             MemoryStream decryptFile = DecryptSymmetricallyFile(new MemoryStream(encArticle), new SymmetricParameters { SecretKey = decryptKey.ToArray(), IV = decryptIV.ToArray() });
+            decryptFile.Position = 0;
 
             return decryptFile.ToArray();
         }

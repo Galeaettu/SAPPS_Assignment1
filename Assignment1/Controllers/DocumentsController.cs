@@ -72,14 +72,12 @@ namespace Assignment1.Controllers
 
                                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(filePath.FileName);
 
-                                    //d.Username_fk = User.Identity.Name;
                                     d.FilePath = relativePath + fileName; // saves path to the image in the database
-
 
                                     //document.SaveAs(absolutePath + fileName);
                                     filePath.InputStream.Position = 0;
                                     Stream s = new Encryption().HybridEncryptFile(filePath.InputStream, User.Identity.Name, new UsersOperations().GetUser(User.Identity.Name).PublicKey);
-
+                                    s.Position = 0;
                                     FileStream fs = new FileStream(absolutePath + fileName, FileMode.CreateNew, FileAccess.Write);
                                     s.CopyTo(fs);
                                     fs.Close();
@@ -125,6 +123,123 @@ namespace Assignment1.Controllers
                 ViewData["error_message"] = "Unable to add document";
             }
             return View();
+        }
+
+        [Authorize]
+        public ActionResult DownloadFile(string documentId)
+        {
+            if (documentId != null)
+            {
+                int decryptedDocumentId = 0;
+                try
+                {
+                    decryptedDocumentId = Convert.ToInt32(new Encryption().DecryptString(documentId, User.Identity.Name));
+                }
+                catch (FormatException fe)
+                {
+                    TempData["error_message"] = "Document does not exist";
+
+                    new LogsOperations().AddLog(
+                        new Log()
+                        {
+                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                            Exception = fe.Message,
+                            Time = DateTime.Now,
+                            Message = "User tried to manually search for a document in the address bar"
+                        }
+                    );
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    TempData["error_message"] = "Document unavailable";
+                    new LogsOperations().AddLog(
+                        new Log()
+                        {
+                            Controller = "Comment",
+                            Exception = ex.Message,
+                            Time = DateTime.Now,
+                            Message = "documentId decryption error"
+                        }
+                    );
+                    return RedirectToAction("Index");
+                }
+
+
+                DocumentsOperations dops = new DocumentsOperations();
+                if (dops.DoesDocumentExist(decryptedDocumentId))
+                {
+                    try
+                    {
+                        Document d = dops.GetDocument(decryptedDocumentId);
+                        if (dops.IsReviewerAllocatedToDocument(User.Identity.Name, decryptedDocumentId))
+                        {
+                            string absolutePath = Server.MapPath(d.FilePath);
+
+                            if (System.IO.File.Exists(absolutePath) == true)
+                            {
+                                FileStream fs = System.IO.File.OpenRead(absolutePath);
+                                MemoryStream ms = new MemoryStream();
+                                fs.CopyTo(ms);
+                                ms.Position = 0;
+
+                                if (new Encryption().DigitalVerify(ms, new UsersOperations().GetUser(d.Username_fk).PublicKey, new DocumentsOperations().GetDocument(decryptedDocumentId).Signature))
+                                {
+                                    MemoryStream msOut = new MemoryStream(new Encryption().HybridDecryptFile(ms, new UsersOperations().GetUser(d.Username_fk).PrivateKey));
+                                    msOut.Position = 0;
+                                    return File(msOut.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet, d.FilePath);
+                                }
+                                else
+                                {
+                                    TempData["error_message"] = "Unable to verify document";
+                                    return RedirectToAction("Index");
+                                }
+                            }
+                            else
+                            {
+                                TempData["error_message"] = "Document does not exist";
+                                return RedirectToAction("Index");
+                            }
+                        }
+                        else
+                        {
+                            TempData["error_message"] = "You are not a reviewer of this document";
+                            new LogsOperations().AddLog(
+                                new Log()
+                                {
+                                    Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                    Exception = "User is not document's reviewer",
+                                    Time = DateTime.Now,
+                                    Message = "User is not document's reviewer"
+                                }
+                            );
+                            return RedirectToAction("Index");
+                        }
+                    }
+                    catch (DocumentExistsException ex)
+                    {
+                        TempData["error_message"] = ex.Message;
+                        new LogsOperations().AddLog(
+                            new Log()
+                            {
+                                Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                Exception = ex.Message,
+                                Time = DateTime.Now,
+                                Message = ex.Message
+                            }
+                        );
+
+                        return RedirectToAction("Index");
+                    }
+                }else
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         [Authorize]

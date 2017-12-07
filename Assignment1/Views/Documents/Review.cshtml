@@ -46,7 +46,7 @@
                     <a class="btn btn-default pull-right" href=@Url.Action("Comment", "Documents", new { documentId = new Common.Encryption().EncryptString(item.Id.ToString(), User.Identity.Name) })>Comments <span class="badge">@item.Comments.Count</span></a>
                 </td>
                 <td>
-                    <button class="btn btn-default">Download</button>
+                    <a class="btn btn-default" href="@Url.Action("DownloadFile", "Documents", new { documentId = new Common.Encryption().EncryptString(item.Id.ToString(), User.Identity.Name) })">Download</a>
                 </td>
             </tr>
         }
