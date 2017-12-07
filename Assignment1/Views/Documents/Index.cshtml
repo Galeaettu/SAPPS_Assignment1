@@ -60,7 +60,6 @@
                     <a class="btn btn-default pull-right" href=@Url.Action("Comment", "Documents", new { documentId = new Common.Encryption().EncryptString(item.Id.ToString(), User.Identity.Name) }) >Comments <span class="badge">@item.Comments.Count</span></a>
                 </td>
                 <td>
-                    <button class="btn btn-default">Download</button>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -68,8 +67,6 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a href="#" data-toggle="modal" data-target="#docModal_@item.Id">Reviewing Permissions</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Delete Document </a></li>
                         </ul>
                     </div>
                 </td>

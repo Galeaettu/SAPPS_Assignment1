@@ -74,7 +74,6 @@ namespace Assignment1.Controllers
 
                                     d.FilePath = relativePath + fileName; // saves path to the image in the database
 
-                                    //document.SaveAs(absolutePath + fileName);
                                     filePath.InputStream.Position = 0;
                                     Stream s = new Encryption().HybridEncryptFile(filePath.InputStream, User.Identity.Name, new UsersOperations().GetUser(User.Identity.Name).PublicKey);
                                     s.Position = 0;
@@ -86,40 +85,110 @@ namespace Assignment1.Controllers
                                     d.Signature = new Encryption().DigitalSign(s, new UsersOperations().GetUser(User.Identity.Name).PrivateKey);
                                     dops.AddDocument(User.Identity.Name, d);
 
-                                    ViewData["success_message"] = "Document uploaded sucessfully";
+                                    ViewData["success_message"] = "Document uploaded successfully";
                                     ModelState.Clear();
                                 }
                                 else
                                 {
+                                    new LogsOperations().AddLog(
+                                        new Log()
+                                        {
+                                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                            Exception = "Very large document",
+                                            Time = DateTime.Now,
+                                            Message = "Very large document"
+                                        }
+                                    );
+
                                     ViewData["message"] = "The document must be smaller than 5MB";
                                 }
                             }
                             else
                             {
+                                new LogsOperations().AddLog(
+                                    new Log()
+                                    {
+                                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                        Exception = "The header values were not of a Word Document",
+                                        Time = DateTime.Now,
+                                        Message = "Not a word document"
+                                    }
+                                );
+
                                 ViewData["message"] = "This is not a valid .docx file";
                             }
                         }
                         else
                         {
+                            new LogsOperations().AddLog(
+                                new Log()
+                                {
+                                    Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                    Exception = "Content Type was not of a Word Document",
+                                    Time = DateTime.Now,
+                                    Message = "Not a word document"
+                                }
+                            );
+
                             ViewData["message"] = "This is not a valid .docx file";
                         }
                     }
                     else
                         {
+                            new LogsOperations().AddLog(
+                                new Log()
+                                {
+                                    Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                    Exception = "File did not end with .docx",
+                                    Time = DateTime.Now,
+                                    Message = "Not a .docx file"
+                                }
+                            );
+
                             ViewData["message"] = "This file is not a document";
                         }
                 }
                 else
                 {
+                    new LogsOperations().AddLog(
+                        new Log()
+                        {
+                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                            Exception = "No document was selected to be uploaded",
+                            Time = DateTime.Now,
+                            Message = "No document"
+                        }
+                    );
+
                     ViewData["message"] = "Please select a document";
                 }
 
             }
             catch (DocumentExistsException de)
             {
+                new LogsOperations().AddLog(
+                    new Log()
+                    {
+                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                        Exception = de.Message,
+                        Time = DateTime.Now,
+                        Message = de.Message
+                    }
+                );
+
                 ViewData["error_message"] = de.Message;
             }catch (Exception ex)
             {
+                new LogsOperations().AddLog(
+                    new Log()
+                    {
+                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                        Exception = ex.Message,
+                        Time = DateTime.Now,
+                        Message = "Unable to add document"
+                    }
+                );
+
                 ViewData["error_message"] = "Unable to add document";
             }
             return View();
@@ -183,21 +252,56 @@ namespace Assignment1.Controllers
                                 fs.CopyTo(ms);
                                 ms.Position = 0;
 
-                                if (new Encryption().DigitalVerify(ms, new UsersOperations().GetUser(d.Username_fk).PublicKey, new DocumentsOperations().GetDocument(decryptedDocumentId).Signature))
+                                try
                                 {
-                                    MemoryStream msOut = new MemoryStream(new Encryption().HybridDecryptFile(ms, new UsersOperations().GetUser(d.Username_fk).PrivateKey));
-                                    msOut.Position = 0;
-                                    return File(msOut.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet, d.FilePath);
+                                    if (new Encryption().DigitalVerify(ms, new UsersOperations().GetUser(d.Username_fk).PublicKey, new DocumentsOperations().GetDocument(decryptedDocumentId).Signature))
+                                    {
+                                        MemoryStream msOut = new MemoryStream(new Encryption().HybridDecryptFile(ms, new UsersOperations().GetUser(d.Username_fk).PrivateKey));
+                                        msOut.Position = 0;
+                                        return File(msOut.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet, d.FilePath);
+                                    }
+                                    else
+                                    {
+                                        TempData["error_message"] = "Unable to verify document";
+                                        new LogsOperations().AddLog(
+                                            new Log()
+                                            {
+                                                Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                                Exception = "Unable to verify document",
+                                                Time = DateTime.Now,
+                                                Message = "Unable to verify document"
+                                            }
+                                        );
+                                        return RedirectToAction("Index");
+                                    }
                                 }
-                                else
+                                catch(Exception ex)
                                 {
                                     TempData["error_message"] = "Unable to verify document";
+                                    new LogsOperations().AddLog(
+                                        new Log()
+                                        {
+                                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                            Exception = "Unable to verify document",
+                                            Time = DateTime.Now,
+                                            Message = "Unable to verify document"
+                                        }
+                                    );
                                     return RedirectToAction("Index");
                                 }
                             }
                             else
                             {
                                 TempData["error_message"] = "Document does not exist";
+                                new LogsOperations().AddLog(
+                                    new Log()
+                                    {
+                                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                        Exception = "Document does not exist",
+                                        Time = DateTime.Now,
+                                        Message = "Document does not exist"
+                                    }
+                                );
                                 return RedirectToAction("Index");
                             }
                         }
@@ -231,13 +335,47 @@ namespace Assignment1.Controllers
 
                         return RedirectToAction("Index");
                     }
+                    catch(Exception ex)
+                    {
+                        TempData["error_message"] = "Unable to download document";
+                        new LogsOperations().AddLog(
+                            new Log()
+                            {
+                                Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                Exception = ex.Message,
+                                Time = DateTime.Now,
+                                Message = "Unable to download document"
+                            }
+                        );
+                        return RedirectToAction("Index");
+                    }
                 }else
                 {
+                    new LogsOperations().AddLog(
+                        new Log()
+                        {
+                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                            Exception = "Document does not exist",
+                            Time = DateTime.Now,
+                            Message = "Document does not exist"
+                        }
+                    );
                     return RedirectToAction("Index");
                 }
             }
             else
             {
+                TempData["error_message"] = "No document selected";
+                new LogsOperations().AddLog(
+                    new Log()
+                    {
+                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                        Exception = "No document selected",
+                        Time = DateTime.Now,
+                        Message = "No document selected"
+                    }
+                );
+
                 return RedirectToAction("Index");
             }
         }
@@ -359,6 +497,21 @@ namespace Assignment1.Controllers
                                 Exception = ex.Message,
                                 Time = DateTime.Now,
                                 Message = ex.Message
+                            }
+                        );
+
+                        return RedirectToAction("Index");
+                    }
+                    catch(Exception ex)
+                    {
+                        TempData["error_message"] = ex.Message;
+                        new LogsOperations().AddLog(
+                            new Log()
+                            {
+                                Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                Exception = ex.Message,
+                                Time = DateTime.Now,
+                                Message = "Error checking reviewing permissions"
                             }
                         );
 
