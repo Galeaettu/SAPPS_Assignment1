@@ -468,7 +468,7 @@ namespace Assignment1.Controllers
                         if (dops.IsReviewerAllocatedToDocument(User.Identity.Name, documentIdToFind) || d.Username_fk == User.Identity.Name)
                         {
                             ViewData["document_title"] = d.Title;
-                            ViewData["document_id"] = d.Id;
+                            ViewData["document_id"] = new Encryption().EncryptString(d.Id.ToString(), User.Identity.Name);
 
                             return View();
                         }
@@ -552,30 +552,193 @@ namespace Assignment1.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Comment(int document, Comment c)
+        public ActionResult Comment(string document, Comment c)
         {
-            DocumentsOperations dops = new DocumentsOperations();
-            Document d = dops.GetDocument(document);
-            ViewData["document_id"] = d.Id;
-            try
+            if (document != null)
             {
-                dops.AddComment(d, c, User.Identity.Name);
-                ModelState.Clear();
+                if (c.Comment1 != null)
+                {
+                    int documentIdToFind = 0;
+                    try
+                    {
+                        documentIdToFind = Convert.ToInt32(new Encryption().DecryptString(document, User.Identity.Name));
+                    }
+                    catch (FormatException fe)
+                    {
+                        TempData["error_message"] = "Document does not exist";
+
+                        new LogsOperations().AddLog(
+                            new Log()
+                            {
+                                Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                Exception = fe.Message,
+                                Time = DateTime.Now,
+                                Message = "User tried to manually search for a document in the address bar"
+                            }
+                        );
+                        return RedirectToAction("Index");
+                    }
+                    catch (Exception ex)
+                    {
+                        TempData["error_message"] = "Document unavailable";
+                        new LogsOperations().AddLog(
+                            new Log()
+                            {
+                                Controller = "Comment",
+                                Exception = ex.Message,
+                                Time = DateTime.Now,
+                                Message = "documentId decryption error"
+                            }
+                        );
+                        return RedirectToAction("Index");
+                    }
+
+                    DocumentsOperations dops = new DocumentsOperations();
+                    if (dops.DoesDocumentExist(documentIdToFind))
+                    {
+                        try
+                        {
+                            Document d = dops.GetDocument(documentIdToFind);
+                            if (dops.IsReviewerAllocatedToDocument(User.Identity.Name, documentIdToFind))
+                            {
+                                ViewData["document_id"] = new Encryption().EncryptString(d.Id.ToString(), User.Identity.Name);
+                                try
+                                {
+                                    dops.AddComment(d, c, User.Identity.Name);
+                                    ModelState.Clear();
+                                }
+                                catch (Exception ex)
+                                {
+                                    ViewData["error_message"] = ex.Message;
+                                    new LogsOperations().AddLog(
+                                        new Log()
+                                        {
+                                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                            Exception = ex.Message,
+                                            Time = DateTime.Now,
+                                            Message = "Adding comment exception"
+                                        }
+                                    );
+
+                                    return RedirectToAction("Review");
+                                }
+
+                                return View();
+                            }
+                            else
+                            {
+                                TempData["error_message"] = "You are not a reviewer of this document";
+                                new LogsOperations().AddLog(
+                                    new Log()
+                                    {
+                                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                        Exception = "User is not document's reviewer",
+                                        Time = DateTime.Now,
+                                        Message = "User is not document's reviewer"
+                                    }
+                                );
+                                return RedirectToAction("Review");
+                            }
+                        }
+                        catch (DocumentExistsException ex)
+                        {
+                            TempData["error_message"] = ex.Message;
+                            new LogsOperations().AddLog(
+                                new Log()
+                                {
+                                    Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                    Exception = ex.Message,
+                                    Time = DateTime.Now,
+                                    Message = ex.Message
+                                }
+                            );
+
+                            return RedirectToAction("Review");
+                        }
+                        catch (Exception ex)
+                        {
+                            TempData["error_message"] = ex.Message;
+                            new LogsOperations().AddLog(
+                                new Log()
+                                {
+                                    Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                    Exception = ex.Message,
+                                    Time = DateTime.Now,
+                                    Message = "Error checking reviewing permissions"
+                                }
+                            );
+
+                            return RedirectToAction("Review");
+                        }
+                    }
+                    else
+                    {
+                        TempData["error_message"] = "Document does not exist";
+                        new LogsOperations().AddLog(
+                            new Log()
+                            {
+                                Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                                Exception = "Document does not exist",
+                                Time = DateTime.Now,
+                                Message = "Document does not exist"
+                            }
+                        );
+                        return RedirectToAction("Review");
+                    }
+
+                }
+                else
+                {
+                    TempData["error_message"] = "Comment cannot be empty";
+                    new LogsOperations().AddLog(
+                        new Log()
+                        {
+                            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                            Exception = "No comment entered",
+                            Time = DateTime.Now,
+                            Message = "No comment entered"
+                        }
+                    );
+                    return RedirectToAction("Review");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                ViewData["error_message"] = ex.Message;
+                TempData["error_message"] = "No document selected";
                 new LogsOperations().AddLog(
                     new Log()
                     {
                         Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
-                        Exception = ex.Message,
+                        Exception = "No document selected",
                         Time = DateTime.Now,
-                        Message = "Adding comment exception"
+                        Message = "No document selected"
                     }
                 );
+                return RedirectToAction("Review");
             }
-            return View();
+
+            //DocumentsOperations dops = new DocumentsOperations();
+            //Document d = dops.GetDocument(document);
+            //ViewData["document_id"] = d.Id;
+            //try
+            //{
+            //    dops.AddComment(d, c, User.Identity.Name);
+            //    ModelState.Clear();
+            //}
+            //catch (Exception ex)
+            //{
+            //    ViewData["error_message"] = ex.Message;
+            //    new LogsOperations().AddLog(
+            //        new Log()
+            //        {
+            //            Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+            //            Exception = ex.Message,
+            //            Time = DateTime.Now,
+            //            Message = "Adding comment exception"
+            //        }
+            //    );
+            //}
+            //return View();
         }      
     }
 }

@@ -29,7 +29,7 @@
         </div>
     }
 
-    @if (new BusinessLogic.DocumentsOperations().IsReviewerAllocatedToDocument(User.Identity.Name, (int)ViewData["document_id"]))
+    @if (new BusinessLogic.DocumentsOperations().IsReviewerAllocatedToDocument(User.Identity.Name, Convert.ToInt32(new Common.Encryption().DecryptString(ViewData["document_id"].ToString(), User.Identity.Name) ) ))
     {
         using (Html.BeginForm())
         {
@@ -65,8 +65,7 @@
     }
     <hr />
 
-
-    @foreach (var doc in new BusinessLogic.DocumentsOperations().GetComments((int)ViewData["document_id"]))
+    @foreach (var doc in new BusinessLogic.DocumentsOperations().GetComments(Convert.ToInt32(new Common.Encryption().DecryptString(ViewData["document_id"].ToString(), User.Identity.Name))))
     {
         <div class="thumbnail comment">
             <div class="media">
