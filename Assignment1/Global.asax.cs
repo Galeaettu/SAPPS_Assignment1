@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BusinessLogic;
+using Common;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -16,6 +18,20 @@ namespace Assignment1
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             EncryptConnString();
+        }
+
+        protected void Application_Error()
+        {
+            var ex = Server.GetLastError();
+            new LogsOperations().AddLog(
+                new Log()
+                {
+                    Controller = "",
+                    Exception = ex.Message,
+                    Time = DateTime.Now,
+                    Message = "Unhandled exception"
+                }
+            );
         }
 
         public void EncryptConnString()

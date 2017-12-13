@@ -739,6 +739,30 @@ namespace Assignment1.Controllers
             //    );
             //}
             //return View();
-        }      
+        }
+
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            filterContext.ExceptionHandled = true;
+
+            if (filterContext.Exception.GetType() == typeof(HttpRequestValidationException))
+            {
+                TempData["error_message"] = "Invalid data";
+                new LogsOperations().AddLog(
+                    new Log()
+                    {
+                        Controller = RouteData.Values["controller"].ToString() + "/" + RouteData.Values["action"].ToString(),
+                        Exception = filterContext.Exception.Message,
+                        Time = DateTime.Now,
+                        Message = "User entered invalid data in comment"
+                    }
+                );
+                filterContext.Result = RedirectToAction("Review", "Documents");
+            }
+            else
+            {
+                filterContext.Result = RedirectToAction("Index");
+            }
+        }
     }
 }

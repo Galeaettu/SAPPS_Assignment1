@@ -24,3 +24,9 @@
         }
     </div>
 </div>
+@if (TempData["error_message"] != null)
+{
+    <div class="alert alert-danger text-center">
+        @TempData["error_message"]
+    </div>
+}
