@@ -45,7 +45,6 @@ namespace BusinessLogic
 
         public bool Login(string username, string password)
         {
-            //logic to validate how many attempts have been tried by this username to log in.
             //return new UsersRepository().Login(username, new Encryption().HashString(password));
 
             LoginAttemptsRepository loginAttempts = new LoginAttemptsRepository();

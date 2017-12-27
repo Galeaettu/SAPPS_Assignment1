@@ -130,7 +130,7 @@ namespace Assignment1.Controllers
                         Message = "reCaptcha failure"
                     }
                 );
-                throw new Exception("Unable to verify reCaptcha");
+                //throw new Exception("Unable to verify reCaptcha");
             }
             return status;
         }
